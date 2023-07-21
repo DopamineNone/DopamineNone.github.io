@@ -10,7 +10,11 @@
 <meta property="article:modified_time" content="2023-07-21T06:58:02.263Z">
 <meta property="article:author" content="DopamineNone">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://dopaminenone.github.io/img/avatar.png"><link rel="shortcut icon" href="/img/pad.png"><link rel="canonical" href="http://dopaminenone.github.io/2023/04/16/hello-world/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+<meta name="twitter:image" content="http://dopaminenone.github.io/img/avatar.png"><link rel="shortcut icon" href="/img/pad.png"><link rel="canonical" href="http://dopaminenone.github.io/2023/04/16/hello-world/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-H8LXHWF190"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-H8LXHWF190');
+</script><script>const GLOBAL_CONFIG = {
   root: '/',
   algolia: undefined,
   localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found"}},
@@ -275,7 +279,7 @@ var pjax = new Pjax({
   elements: 'a:not([target="_blank"])',
   selectors: pjaxSelectors,
   cacheBust: false,
-  analytics: false,
+  analytics: true,
   scrollRestoration: false
 })
 
@@ -320,7 +324,7 @@ document.addEventListener('pjax:complete', function () {
   typeof panguInit === 'function' && panguInit()
 
   // google analytics
-  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+  typeof gtag === 'function' && gtag('config', 'G-H8LXHWF190', {'page_path': window.location.pathname});
 
   // baidu analytics
   typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
