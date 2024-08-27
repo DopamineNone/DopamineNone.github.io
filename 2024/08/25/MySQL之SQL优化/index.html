@@ -1,0 +1,328 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>MySQL之SQL优化 | 多巴胺の小窝</title><meta name="author" content="DopamineNone"><meta name="copyright" content="DopamineNone"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="插入数据 批量插入（但也不用一次插入超过1000条记录） insert into ... values (...) (...) ... (...)  手动提交事务（可以避免频繁的事务开启和关闭） 12345start transaction;insert ...insert ......commit;  主键顺序插入性能高于乱序插入  大批量插入数据使用MySQL提供的load指令 1234567">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL之SQL优化">
+<meta property="og:url" content="https://dopaminenone.github.io/2024/08/25/MySQL%E4%B9%8BSQL%E4%BC%98%E5%8C%96/index.html">
+<meta property="og:site_name" content="多巴胺の小窝">
+<meta property="og:description" content="插入数据 批量插入（但也不用一次插入超过1000条记录） insert into ... values (...) (...) ... (...)  手动提交事务（可以避免频繁的事务开启和关闭） 12345start transaction;insert ...insert ......commit;  主键顺序插入性能高于乱序插入  大批量插入数据使用MySQL提供的load指令 1234567">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://dopaminenone.github.io/img/avatar.png">
+<meta property="article:published_time" content="2024-08-25T02:09:04.000Z">
+<meta property="article:modified_time" content="2024-08-27T02:37:15.329Z">
+<meta property="article:author" content="DopamineNone">
+<meta property="article:tag" content="MySQL">
+<meta property="article:tag" content="SQL">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://dopaminenone.github.io/img/avatar.png"><link rel="shortcut icon" href="/img/pad.png"><link rel="canonical" href="https://dopaminenone.github.io/2024/08/25/MySQL%E4%B9%8BSQL%E4%BC%98%E5%8C%96/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin=""/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?93140760943d4fd0d21f31347c4b5cfc";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-H8LXHWF190"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-H8LXHWF190');
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: DopamineNone","link":"链接: ","source":"来源: 多巴胺の小窝","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'MySQL之SQL优化',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-08-27 10:37:15'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (false) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">13</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-heartbeat"></i><span> 生活</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 影视</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 其他</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></li><li><a class="site-page child" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/banner.png')"><nav id="nav"><span id="blog-info"><a href="/" title="多巴胺の小窝"><span class="site-name">多巴胺の小窝</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-heartbeat"></i><span> 生活</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 影视</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 其他</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></li><li><a class="site-page child" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">MySQL之SQL优化</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon fas fa-history"></i><span class="post-meta-label">更新于</span><time datetime="2024-08-27T02:37:15.329Z" title="更新于 2024-08-27 10:37:15">2024-08-27</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="MySQL之SQL优化"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="插入数据"><a href="#插入数据" class="headerlink" title="插入数据"></a>插入数据</h2><ol>
+<li><p>批量插入（但也不用一次插入超过1000条记录）</p>
+<p><code>insert into ... values (...) (...) ... (...)</code></p>
+</li>
+<li><p>手动提交事务（可以避免频繁的事务开启和关闭）</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">start</span> transaction;</span><br><span class="line"><span class="keyword">insert</span> ...</span><br><span class="line"><span class="keyword">insert</span> ...</span><br><span class="line">...</span><br><span class="line"><span class="keyword">commit</span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>主键顺序插入性能高于乱序插入</p>
+</li>
+<li><p>大批量插入数据使用MySQL提供的load指令</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 客户端连接服务端加上参数 --local-infile</span><br><span class="line">mysql --local-infile -u root -p</span><br><span class="line"></span><br><span class="line"># 设置全局参数local_infile=<span class="number">1</span></span><br><span class="line"><span class="built_in">set</span> global local_infile = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"># 执行load指令</span><br><span class="line">load data local infile &#x27;/<span class="built_in">path</span>/to/file&#x27; into table `table_name` fields terminated by &#x27;,&#x27; lines terminated by &#x27;\n&#x27;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="主键优化"><a href="#主键优化" class="headerlink" title="主键优化"></a>主键优化</h2><p>InnoDB的存储方式为<strong>索引组织表（IOT）</strong>,即表数据是根据主键顺序组织存放的。</p>
+<h3 id="页分裂"><a href="#页分裂" class="headerlink" title="页分裂"></a>页分裂</h3><p>插入新数据时，若当前页没有足够的空间容纳新插入的数据，则会进行页分裂，即</p>
+<ul>
+<li>确认分割点</li>
+<li>创建新页</li>
+<li>重新分配记录</li>
+<li>更新父节点</li>
+</ul>
+<blockquote>
+<p>乱序插入可能导致频繁的页分裂，增加更多的磁盘I&#x2F;O开销</p>
+</blockquote>
+<h3 id="页合并"><a href="#页合并" class="headerlink" title="页合并"></a>页合并</h3><p>删除记录时，往往不会被物理删除，而是标记被删除记录空间，供其他记录声明使用；当页中删除的记录达到一定比例（<strong>MERGE_THRESHOLD</strong>），InnoDB会尝试合并相邻的页。</p>
+<h3 id="主键设计原则"><a href="#主键设计原则" class="headerlink" title="主键设计原则"></a>主键设计原则</h3><ol>
+<li>满足业务需求的情况下，尽量降低主键长度（长主键会导致更多的磁盘空间占用和增加更多磁盘I&#x2F;O开销）</li>
+<li>插入时间尽量选择顺序插入，使用auto_increment自增主键</li>
+<li>业务操作中，避免对主键的修改</li>
+</ol>
+<blockquote>
+<p>尽量不要使用UUID或其他自然主键作为主键，如身份证，理由同1</p>
+</blockquote>
+<h2 id="order-by"><a href="#order-by" class="headerlink" title="order by"></a>order by</h2><p>InnoDB中排序的实现：</p>
+<ol>
+<li>Using filesort: 提供索引或全表扫描，读取相应的记录，在缓冲区进行排序</li>
+<li>Using index: 通过有序索引顺序扫描直接返回结果</li>
+</ol>
+<p>给相应被排序字段创建索引即可实现优化（1-&gt;2）。</p>
+<p>如果已经存在相关字段的（联合）索引，以下情况仍会导致using filesort:</p>
+<ul>
+<li>order by 字段顺序违背最左前缀法则</li>
+<li>order by 不同字段的升降序性不同<ul>
+<li>创建索引时默认字段按升序排列</li>
+<li>创建索引时指定相应字段的升降序性可以实现优化</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<ul>
+<li>using index优化的前提是用到索引的覆盖索引</li>
+<li>大数据量排序，不可避免filesort时，可以适当提高排序缓冲区大小</li>
+</ul>
+</blockquote>
+<h2 id="group-by"><a href="#group-by" class="headerlink" title="group by"></a>group by</h2><p>类似order by，也可以通过建立索引提高效率</p>
+<h2 id="order-by-limit"><a href="#order-by-limit" class="headerlink" title="order by + limit"></a>order by + limit</h2><p>对于limit操作，数据量（偏离量）越大，检索效率越低</p>
+<p>优化方案：覆盖索引+子查询</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> t1.<span class="operator">*</span> <span class="keyword">from</span> <span class="keyword">Table</span> t1, (<span class="keyword">select</span> id <span class="keyword">from</span> <span class="keyword">Table</span> <span class="keyword">order</span> <span class="keyword">by</span> id limit <span class="number">10000000</span>, <span class="number">10</span>) t2 <span class="keyword">where</span> t1.id<span class="operator">=</span>t2.id</span><br></pre></td></tr></table></figure>
+
+<h2 id="count"><a href="#count" class="headerlink" title="count"></a>count</h2><ul>
+<li>MyISAM引擎把一张表总行数存在磁盘上，执行<code>count(*)</code>时就返回这个数，故效率很高</li>
+<li>InnoDB则每次执行<code>count(*)</code>会全表遍历计数</li>
+</ul>
+<p>优化方案：维护自定义计数表</p>
+<blockquote>
+<p>count的四种用法：</p>
+<ul>
+<li>count(*) 统计表的总行数， 不取值</li>
+<li>count(id&#x2F;主键) 取值判断，再按行累加</li>
+<li>count(字段) 统计该字段不为NULL的记录总数， 取值判断</li>
+<li>count(1) 按行累加1 (1可以替换成其他数字)， 不取值</li>
+</ul>
+<p><strong>count(*) ≈ count(1) &gt; count(id) &gt; count(字段)</strong></p>
+</blockquote>
+<h2 id="update"><a href="#update" class="headerlink" title="update"></a>update</h2><p>优化方案：尽量根据索引字段进行更新；避免使用非索引字段进行更新，导致表锁阻塞其他更新操作</p>
+</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://dopaminenone.github.io">DopamineNone</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://dopaminenone.github.io/2024/08/25/MySQL%E4%B9%8BSQL%E4%BC%98%E5%8C%96/">https://dopaminenone.github.io/2024/08/25/MySQL%E4%B9%8BSQL%E4%BC%98%E5%8C%96/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://dopaminenone.github.io" target="_blank">多巴胺の小窝</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/MySQL/">MySQL</a><a class="post-meta__tags" href="/tags/SQL/">SQL</a></div><div class="post_share"></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat.png" target="_blank"><img class="post-qr-code-img" src="/img/wechat.png" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/img/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="/img/alipay.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2024/08/24/MySQL%E4%B9%8B%E7%B4%A2%E5%BC%95/" title="MySQL之索引"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">MySQL之索引</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/08/24/MySQL%E4%B9%8B%E7%B4%A2%E5%BC%95/" title="MySQL之索引"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-08-24</div><div class="title">MySQL之索引</div></div></a></div><div><a href="/2024/08/20/MySQL%E4%BA%8B%E5%8A%A1/" title="MySQL事务"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-08-20</div><div class="title">MySQL事务</div></div></a></div><div><a href="/2024/08/19/SQL%E5%9F%BA%E7%A1%80(%E5%9F%BA%E4%BA%8EMySQL)/" title="SQL基础(基于MySQL)"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-08-19</div><div class="title">SQL基础(基于MySQL)</div></div></a></div><div><a href="/2024/08/24/MySQL%E4%B9%8B%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/" title="MySQL之存储引擎"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-08-24</div><div class="title">MySQL之存储引擎</div></div></a></div><div><a href="/2024/08/19/MySQL%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0/" title="MySQL常用函数"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-08-19</div><div class="title">MySQL常用函数</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">DopamineNone</div><div class="author-info__description">追求自发向上的成长</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">13</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/DopamineNone"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/DopamineNone" target="_blank" title="GitHub"><i class="fab fa-github" style="color: ;"></i></a><a class="social-icon" href="mailto:dopaminenone@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: ;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">本博客尚未加速，请耐心等待加载...</br>网址1：</br>https://dopamine-none.gitee.io/</br>网址2：</br>https://dopaminenone.github.io/</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%92%E5%85%A5%E6%95%B0%E6%8D%AE"><span class="toc-number">1.</span> <span class="toc-text">插入数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E9%94%AE%E4%BC%98%E5%8C%96"><span class="toc-number">2.</span> <span class="toc-text">主键优化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A1%B5%E5%88%86%E8%A3%82"><span class="toc-number">2.1.</span> <span class="toc-text">页分裂</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A1%B5%E5%90%88%E5%B9%B6"><span class="toc-number">2.2.</span> <span class="toc-text">页合并</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E9%94%AE%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99"><span class="toc-number">2.3.</span> <span class="toc-text">主键设计原则</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#order-by"><span class="toc-number">3.</span> <span class="toc-text">order by</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#group-by"><span class="toc-number">4.</span> <span class="toc-text">group by</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#order-by-limit"><span class="toc-number">5.</span> <span class="toc-text">order by + limit</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#count"><span class="toc-number">6.</span> <span class="toc-text">count</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#update"><span class="toc-number">7.</span> <span class="toc-text">update</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/08/25/MySQL%E4%B9%8BSQL%E4%BC%98%E5%8C%96/" title="MySQL之SQL优化">MySQL之SQL优化</a><time datetime="2024-08-25T02:09:04.000Z" title="发表于 2024-08-25 10:09:04">2024-08-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/08/24/MySQL%E4%B9%8B%E7%B4%A2%E5%BC%95/" title="MySQL之索引">MySQL之索引</a><time datetime="2024-08-24T07:50:00.000Z" title="发表于 2024-08-24 15:50:00">2024-08-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/08/24/MySQL%E4%B9%8B%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/" title="MySQL之存储引擎">MySQL之存储引擎</a><time datetime="2024-08-24T06:00:00.000Z" title="发表于 2024-08-24 14:00:00">2024-08-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/08/20/Redis%E5%9F%BA%E7%A1%80/" title="Redis基础">Redis基础</a><time datetime="2024-08-20T03:58:25.000Z" title="发表于 2024-08-20 11:58:25">2024-08-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/08/20/MySQL%E4%BA%8B%E5%8A%A1/" title="MySQL事务">MySQL事务</a><time datetime="2024-08-20T02:24:00.000Z" title="发表于 2024-08-20 10:24:00">2024-08-20</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/img/banner.png')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By DopamineNone</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Welcome to my blog!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '935a45e292e7aefc49f5',
+      clientSecret: '4f0120383b37695a558ebab1ed09ee8e3c89d0d4',
+      repo: 'dopaminenone.github.io',
+      owner: 'DopamineNone',
+      admin: ['DopamineNone'],
+      id: '3f7ee87b4317ab6f9994110eec17a2fc',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.textContent= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !false) {
+  if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

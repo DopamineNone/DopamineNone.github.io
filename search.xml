@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>MySQL之SQL优化</title>
+      <link href="/2024/08/25/MySQL%E4%B9%8BSQL%E4%BC%98%E5%8C%96/"/>
+      <url>/2024/08/25/MySQL%E4%B9%8BSQL%E4%BC%98%E5%8C%96/</url>
+      
+        <content type="html"><![CDATA[<h2 id="插入数据"><a href="#插入数据" class="headerlink" title="插入数据"></a>插入数据</h2><ol><li><p>批量插入（但也不用一次插入超过1000条记录）</p><p><code>insert into ... values (...) (...) ... (...)</code></p></li><li><p>手动提交事务（可以避免频繁的事务开启和关闭）</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">start</span> transaction;</span><br><span class="line"><span class="keyword">insert</span> ...</span><br><span class="line"><span class="keyword">insert</span> ...</span><br><span class="line">...</span><br><span class="line"><span class="keyword">commit</span>;</span><br></pre></td></tr></table></figure></li><li><p>主键顺序插入性能高于乱序插入</p></li><li><p>大批量插入数据使用MySQL提供的load指令</p><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 客户端连接服务端加上参数 --local-infile</span><br><span class="line">mysql --local-infile -u root -p</span><br><span class="line"></span><br><span class="line"># 设置全局参数local_infile=<span class="number">1</span></span><br><span class="line"><span class="built_in">set</span> global local_infile = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"># 执行load指令</span><br><span class="line">load data local infile &#x27;/<span class="built_in">path</span>/to/file&#x27; into table `table_name` fields terminated by &#x27;,&#x27; lines terminated by &#x27;\n&#x27;;</span><br></pre></td></tr></table></figure><h2 id="主键优化"><a href="#主键优化" class="headerlink" title="主键优化"></a>主键优化</h2><p>InnoDB的存储方式为<strong>索引组织表（IOT）</strong>,即表数据是根据主键顺序组织存放的。</p><h3 id="页分裂"><a href="#页分裂" class="headerlink" title="页分裂"></a>页分裂</h3><p>插入新数据时，若当前页没有足够的空间容纳新插入的数据，则会进行页分裂，即</p><ul><li>确认分割点</li><li>创建新页</li><li>重新分配记录</li><li>更新父节点</li></ul><blockquote><p>乱序插入可能导致频繁的页分裂，增加更多的磁盘I&#x2F;O开销</p></blockquote><h3 id="页合并"><a href="#页合并" class="headerlink" title="页合并"></a>页合并</h3><p>删除记录时，往往不会被物理删除，而是标记被删除记录空间，供其他记录声明使用；当页中删除的记录达到一定比例（<strong>MERGE_THRESHOLD</strong>），InnoDB会尝试合并相邻的页。</p><h3 id="主键设计原则"><a href="#主键设计原则" class="headerlink" title="主键设计原则"></a>主键设计原则</h3><ol><li>满足业务需求的情况下，尽量降低主键长度（长主键会导致更多的磁盘空间占用和增加更多磁盘I&#x2F;O开销）</li><li>插入时间尽量选择顺序插入，使用auto_increment自增主键</li><li>业务操作中，避免对主键的修改</li></ol><blockquote><p>尽量不要使用UUID或其他自然主键作为主键，如身份证，理由同1</p></blockquote><h2 id="order-by"><a href="#order-by" class="headerlink" title="order by"></a>order by</h2><p>InnoDB中排序的实现：</p><ol><li>Using filesort: 提供索引或全表扫描，读取相应的记录，在缓冲区进行排序</li><li>Using index: 通过有序索引顺序扫描直接返回结果</li></ol><p>给相应被排序字段创建索引即可实现优化（1-&gt;2）。</p><p>如果已经存在相关字段的（联合）索引，以下情况仍会导致using filesort:</p><ul><li>order by 字段顺序违背最左前缀法则</li><li>order by 不同字段的升降序性不同<ul><li>创建索引时默认字段按升序排列</li><li>创建索引时指定相应字段的升降序性可以实现优化</li></ul></li></ul><blockquote><ul><li>using index优化的前提是用到索引的覆盖索引</li><li>大数据量排序，不可避免filesort时，可以适当提高排序缓冲区大小</li></ul></blockquote><h2 id="group-by"><a href="#group-by" class="headerlink" title="group by"></a>group by</h2><p>类似order by，也可以通过建立索引提高效率</p><h2 id="order-by-limit"><a href="#order-by-limit" class="headerlink" title="order by + limit"></a>order by + limit</h2><p>对于limit操作，数据量（偏离量）越大，检索效率越低</p><p>优化方案：覆盖索引+子查询</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> t1.<span class="operator">*</span> <span class="keyword">from</span> <span class="keyword">Table</span> t1, (<span class="keyword">select</span> id <span class="keyword">from</span> <span class="keyword">Table</span> <span class="keyword">order</span> <span class="keyword">by</span> id limit <span class="number">10000000</span>, <span class="number">10</span>) t2 <span class="keyword">where</span> t1.id<span class="operator">=</span>t2.id</span><br></pre></td></tr></table></figure><h2 id="count"><a href="#count" class="headerlink" title="count"></a>count</h2><ul><li>MyISAM引擎把一张表总行数存在磁盘上，执行<code>count(*)</code>时就返回这个数，故效率很高</li><li>InnoDB则每次执行<code>count(*)</code>会全表遍历计数</li></ul><p>优化方案：维护自定义计数表</p><blockquote><p>count的四种用法：</p><ul><li>count(*) 统计表的总行数， 不取值</li><li>count(id&#x2F;主键) 取值判断，再按行累加</li><li>count(字段) 统计该字段不为NULL的记录总数， 取值判断</li><li>count(1) 按行累加1 (1可以替换成其他数字)， 不取值</li></ul><p><strong>count(*) ≈ count(1) &gt; count(id) &gt; count(字段)</strong></p></blockquote><h2 id="update"><a href="#update" class="headerlink" title="update"></a>update</h2><p>优化方案：尽量根据索引字段进行更新；避免使用非索引字段进行更新，导致表锁阻塞其他更新操作</p></li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> 数据库 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> MySQL </tag>
+            
+            <tag> SQL </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>MySQL之索引</title>
       <link href="/2024/08/24/MySQL%E4%B9%8B%E7%B4%A2%E5%BC%95/"/>
       <url>/2024/08/24/MySQL%E4%B9%8B%E7%B4%A2%E5%BC%95/</url>
