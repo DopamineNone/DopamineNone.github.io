@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>MySQL之视图</title>
+      <link href="/2024/08/27/MySQL%E4%B9%8B%E8%A7%86%E5%9B%BE/"/>
+      <url>/2024/08/27/MySQL%E4%B9%8B%E8%A7%86%E5%9B%BE/</url>
+      
+        <content type="html"><![CDATA[<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>视图是一种虚拟表，它并不存储实际的数据，而是通过 SELECT 语句定义了一个结果集。视图可以简化复杂的查询，提供数据的安全访问机制，并且可以让用户看到多个表的组合结果。</p><ul><li>视图的定义本质上是一个 <code>SELECT</code> 语句。</li><li>当查询视图时，实际上是执行了视图定义中的 <code>SELECT</code> 语句。</li><li>视图还具有持久性、安全性、可重用性等特点，这使得它不仅仅是简单的 <code>SELECT</code> 语句别名。<ul><li>持久性：视图定义保存在数据库中，即使数据库重启后仍然存在；视图本身不存储数据，而是指向数据库中实际存储的数据</li><li>安全性：视图可以用来限制用户访问敏感数据；用户只能通过视图访问数据，而不能直接访问基础表</li><li>可重用性：视图可以被多次使用，就像使用表一样</li></ul></li></ul><h2 id="视图的增删改查"><a href="#视图的增删改查" class="headerlink" title="视图的增删改查"></a>视图的增删改查</h2><h3 id="创建"><a href="#创建" class="headerlink" title="创建"></a>创建</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> [<span class="keyword">OR</span> REPLACE] <span class="keyword">VIEW</span> view_name <span class="keyword">AS</span> <span class="keyword">SELECT</span>语句;</span><br></pre></td></tr></table></figure><h3 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h3><p>查询视图的<code>SELECT</code>语句：</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> <span class="keyword">create</span> <span class="keyword">view</span> view_name;</span><br></pre></td></tr></table></figure><p>查询视图数据用法和查询表数据用法一致</p><h3 id="修改"><a href="#修改" class="headerlink" title="修改"></a>修改</h3><ul><li>方法一：<code>CREATE OR REPLACE VIEW view_name AS ...</code></li><li>方法二：<code>ALTER VIEW view_name AS ...</code></li></ul><h3 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">VIEW</span> IF <span class="keyword">EXISTS</span> view_name;</span><br></pre></td></tr></table></figure><h2 id="检查选项"><a href="#检查选项" class="headerlink" title="检查选项"></a>检查选项</h2><p>视图的检查选项的作用是通过视图检查正在修改的每个行是否符合视图的定义。MySQL提供了两个选项：</p><ul><li>WITH CASCADED CHECK OPTION (默认值) 会递归检查操作是否满足当前视图以及其引用的所有视图的定义条件</li><li>WITH LOCAL CHECK OPTION 仅检查操作是否满足当前视图以及<strong>其引用且有检查选项的</strong>的视图的定义</li></ul><blockquote><ul><li>MySQL允许基于视图再创建视图</li><li>不建议通过视图进行增删改操作</li></ul></blockquote><h2 id="视图更新"><a href="#视图更新" class="headerlink" title="视图更新"></a>视图更新</h2><p>视图可更新必须满足视图的行和基础表的行必须存在一对一关系。若视图包含以下任意一项，该视图就不可更新：</p><ul><li>聚合函数&#x2F;窗口函数</li><li>DISTINCT</li><li>GROUP BY</li><li>HAVING</li><li>UNION&#x2F; UNION ALL</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 数据库 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> MySQL </tag>
+            
+            <tag> SQL </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>MySQL之SQL优化</title>
       <link href="/2024/08/25/MySQL%E4%B9%8BSQL%E4%BC%98%E5%8C%96/"/>
       <url>/2024/08/25/MySQL%E4%B9%8BSQL%E4%BC%98%E5%8C%96/</url>
