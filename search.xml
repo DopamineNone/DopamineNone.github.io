@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>MySQL之锁</title>
+      <link href="/2024/08/28/MySQL%E4%B9%8B%E9%94%81/"/>
+      <url>/2024/08/28/MySQL%E4%B9%8B%E9%94%81/</url>
+      
+        <content type="html"><![CDATA[<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>锁是计算机协调多进程&#x2F;线程访问临界资源的机制。MySQL中，按锁的的粒度可分为三类锁：</p><ul><li>全局锁：数据库中所有表</li><li>表级锁：每次操作锁整张表</li><li>行级锁：每次操作锁相应的行</li></ul><h2 id="全局锁"><a href="#全局锁" class="headerlink" title="全局锁"></a>全局锁</h2><p>加锁后整个实例处于只读状态。</p><p>应用场景：全库的逻辑备份</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 加全局锁</span></span><br><span class="line">flush tables <span class="keyword">with</span> read lock;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 备份数据</span></span><br><span class="line">mysqldump <span class="operator">-</span>u root <span class="operator">-</span>p your_database <span class="operator">&gt;</span> xxx.sql</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 解锁</span></span><br><span class="line">unlock tables;</span><br></pre></td></tr></table></figure><p>存在的问题：</p><ul><li>主库备份：备份期间业务停摆</li><li>从库备份：不能执行主库同步过来的binlog，导致主从延迟</li></ul><p>故推荐用参数<code>--single-transaction</code>代替全局锁完成一致性数据备份</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysqldump <span class="comment">--single-transaction ...</span></span><br></pre></td></tr></table></figure><h2 id="表级锁"><a href="#表级锁" class="headerlink" title="表级锁"></a>表级锁</h2><p>表级锁又分为：</p><ul><li>表锁<ul><li>表共享读锁</li><li>表独占写锁</li></ul></li><li>元数据锁</li><li>意向锁</li></ul><h3 id="表锁"><a href="#表锁" class="headerlink" title="表锁"></a>表锁</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 加锁</span></span><br><span class="line">lock tables table_name [read<span class="operator">|</span>write];</span><br><span class="line"><span class="comment">-- 释放锁</span></span><br><span class="line">unlock tables;</span><br></pre></td></tr></table></figure><p>表共享读锁, 表独占写锁与Golang的读写锁<code>sync.RWMutex</code>概念类似</p><h3 id="元数据锁"><a href="#元数据锁" class="headerlink" title="元数据锁"></a>元数据锁</h3><p>meta data lock(MDL), 加锁过程由系统自动控制，MDL锁主要作用是维护元数据的一致性；避免DML和DDL冲突，保证读写正确性。</p><p><img src="/./pics/image-20240828090653972.png" alt="image-20240828090653972"></p><p>查看当前数据库使用的元素据锁：</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> object_type, object_schema, object_name, lock_type, lock_duration <span class="keyword">from</span> performance_schema.metadata_locks;</span><br></pre></td></tr></table></figure><h3 id="意向锁"><a href="#意向锁" class="headerlink" title="意向锁"></a>意向锁</h3><p>作用：避免DML加的行锁和表锁的冲突；使用意向锁来减少表锁的检查;也是系统自动追加的锁。</p><ul><li><p>防止死锁和冲突：通过使用意向锁，系统可以更好地协调不同事务之间的并发操作，避免出现死锁情况。</p></li><li><p>提供锁升级路径：意向锁允许从较低级别的锁（如行级锁）升级到更高级别（如表级锁），而无需释放所有较低级别的锁再重新加锁。</p></li><li><p>意向共享锁（IS）：读锁兼容，写锁互斥</p></li><li><p>意向排他锁（IX）：读写锁都互斥</p></li></ul><p>查看意向锁和行锁情况：</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> object_schema, object_name, index_name, lock_type, lock_mode, lock_data <span class="keyword">from</span> performance_schema.data_locks;</span><br></pre></td></tr></table></figure><h2 id="行级锁"><a href="#行级锁" class="headerlink" title="行级锁"></a>行级锁</h2><p>锁定粒度最小，并发度最高。</p><p>行锁是通过索引上的索引项加锁来实现的，而不是对记录加的锁。</p><p>InnoDB下行级锁又分为三类：</p><ul><li>行锁： 锁定单个行记录的锁，防止其他事务对此进行update和delete</li><li>间隙锁：锁定索引记录间隙，防止其他事务在足够间隙进行insert，产生幻读</li><li>临键锁：行锁和间隙锁的组合</li></ul><h3 id="行锁"><a href="#行锁" class="headerlink" title="行锁"></a>行锁</h3><ul><li>共享锁（S）</li><li>排他锁（X）</li></ul><p><img src="/./pics/image-20240828093124913.png" alt="image-20240828093124913"></p><ul><li>针对唯一索引进行检索，对已存在的记录进行等值匹配，将会自动优化为行锁。</li><li>InnoDB的行锁是针对索引加的锁，不通过索引条件检索数据则InnoDB将对表中的所有记录加锁，即升级为表锁</li></ul><h3 id="间隙锁"><a href="#间隙锁" class="headerlink" title="间隙锁"></a>间隙锁</h3><p>REPEATABLE READ事务隔离级别下，InnoDB使用next-keys锁进行搜索和索引扫描，防止幻读</p><ul><li>对索引上的等值查询（唯一索引），给不存在的记录加锁，优化为间隙锁</li><li>对索引上的等值查询（普通索引），向右遍历最后一个值不满足查询需求时，next-key lock退化为间隙锁</li><li>对索引上的范围查询（唯一索引），回访问到不满足条件的第一个值为止</li></ul><h3 id="临键锁"><a href="#临键锁" class="headerlink" title="临键锁"></a>临键锁</h3><p>行锁+间隙锁</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 数据库 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> MySQL </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>MySQL之存储过程&amp;函数&amp;触发器</title>
       <link href="/2024/08/27/MySQL%E4%B9%8B%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B&amp;%E5%87%BD%E6%95%B0&amp;%E8%A7%A6%E5%8F%91%E5%99%A8/"/>
       <url>/2024/08/27/MySQL%E4%B9%8B%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B&amp;%E5%87%BD%E6%95%B0&amp;%E8%A7%A6%E5%8F%91%E5%99%A8/</url>
@@ -290,11 +315,11 @@
       
         <tags>
             
-            <tag> Django </tag>
+            <tag> Python </tag>
             
             <tag> 后端 </tag>
             
-            <tag> Python </tag>
+            <tag> Django </tag>
             
             <tag> Web 框架 </tag>
             
