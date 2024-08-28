@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>MySQL之InnoDB引擎</title>
+      <link href="/2024/08/28/MySQL%E4%B9%8BInnoDB%E5%BC%95%E6%93%8E/"/>
+      <url>/2024/08/28/MySQL%E4%B9%8BInnoDB%E5%BC%95%E6%93%8E/</url>
+      
+        <content type="html"><![CDATA[<h2 id="逻辑存储结构"><a href="#逻辑存储结构" class="headerlink" title="逻辑存储结构"></a>逻辑存储结构</h2><ul><li>TableSpace 表空间<ul><li>ibd文件，一个mysql实例可以对应多个表空间，用于存储记录、索引等数据</li></ul></li><li>Segment 段<ul><li>分为数据段、索引段、回滚段，InnoDB是索引组织表，数据段就是B+树的叶子节点，索引是B+树的非叶子节点。</li></ul></li><li>Extent<ul><li>区，表空间的单元结构，每个区大小为1M</li></ul></li><li>Page<ul><li>页，InnoDB存储引擎磁盘管理的最小单元，每个页的大小默认为16KB，为了保证页的连续性，InnoDB存储引擎每次从磁盘申请4-5个区</li></ul></li><li>Row<ul><li>行</li></ul></li></ul><h2 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h2><h3 id="内存结构"><a href="#内存结构" class="headerlink" title="内存结构"></a>内存结构</h3><h4 id="Buffer-Pool"><a href="#Buffer-Pool" class="headerlink" title="Buffer Pool"></a>Buffer Pool</h4><p>执行增删改操作时，先操作缓冲池数据；若没有数据，则从磁盘加载并缓存；然后再以一定频率刷新到磁盘从而减少磁盘IO</p><p>缓存池以Page为单位，用链表管理Page。</p><ul><li>free page 即空闲Page</li><li>clean page 被使用但违背修改过的page</li><li>dirty page 脏页，数据被修改过，可能与磁盘数据不一致</li></ul><h4 id="Change-Buffer"><a href="#Change-Buffer" class="headerlink" title="Change Buffer"></a>Change Buffer</h4><p>更改缓冲区，针对非谓唯一二级索引页，在执行DML语句时，如果这些数据Page没有在Buffer Pool中，不会直接操作磁盘，而回将数据变更至Change Buffer中。在未来数据被读取时，数据再合并恢复到Buffer Pool中，再将数据刷到磁盘中。</p><blockquote><p>意义：</p><ul><li>减少磁盘I&#x2F;O操作</li><li>提高写入效率</li></ul></blockquote><h4 id="Adaptive-Hash-Index"><a href="#Adaptive-Hash-Index" class="headerlink" title="Adaptive Hash Index"></a>Adaptive Hash Index</h4><p>自适应hash索引，用于优化对Buffer Pool数据的查询。无需人工干预，是系统根据情况自动完成。</p><p>查看是否开启：</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> variables <span class="keyword">like</span> <span class="string">&#x27;%hash_index%&#x27;</span></span><br></pre></td></tr></table></figure><h4 id="Log-Buffer"><a href="#Log-Buffer" class="headerlink" title="Log Buffer"></a>Log Buffer</h4><p>日志缓冲区，保存redo log, undo log数据。日志缓冲区的日志回定期刷新到磁盘中。</p><p>innodb_log_buffer_size: 缓冲区大小</p><p>innodb_flush_log_at_trx_commit: 日志刷新到磁盘时机</p><h3 id="磁盘结构"><a href="#磁盘结构" class="headerlink" title="磁盘结构"></a>磁盘结构</h3><h4 id="System-Tablespace"><a href="#System-Tablespace" class="headerlink" title="System Tablespace"></a>System Tablespace</h4><p>更改缓冲区的存储区域。</p><p>参数：<code>innodb_data_file_path</code></p><h4 id="File-Per-Table-Tablespaces"><a href="#File-Per-Table-Tablespaces" class="headerlink" title="File-Per-Table Tablespaces"></a>File-Per-Table Tablespaces</h4><p>每个表的文件表空间包括单个InnoDB表的数据和索引，并存储在文件系统上的单个数据文件(<code>.ibd</code>)</p><p>参数：<code>innodb_file_per_table</code></p><h4 id="General-Tablespaces"><a href="#General-Tablespaces" class="headerlink" title="General Tablespaces"></a>General Tablespaces</h4><p>通用表空间，需要通过CREATE TABLESPACE语法创建通用表空间，在创建表时，可以指定该表空间。</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span>space space_name <span class="keyword">add</span> datafile <span class="string">&#x27;xxx.ibd&#x27;</span> engine <span class="operator">=</span> innodb;</span><br><span class="line"></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> xxx (</span><br><span class="line">...</span><br><span class="line">) engine<span class="operator">=</span>innodb tablespace space_name;</span><br></pre></td></tr></table></figure><h4 id="Undo-Tablespaces"><a href="#Undo-Tablespaces" class="headerlink" title="Undo Tablespaces"></a>Undo Tablespaces</h4><p>撤销表空间，MySQL实例在初始化时会自动创建两个默认的undo表空间，用于存储undo log</p><h4 id="Temporary-Tablespaces"><a href="#Temporary-Tablespaces" class="headerlink" title="Temporary Tablespaces"></a>Temporary Tablespaces</h4><p>存储临时表</p><h4 id="Doublewrite-Buffer-Files"><a href="#Doublewrite-Buffer-Files" class="headerlink" title="Doublewrite Buffer Files"></a>Doublewrite Buffer Files</h4><p>双写缓冲区，innodb从buffer pool刷新到磁盘前，写将数据页写入双写缓冲区文件，用于系统异常时恢复数据(<code>.dblwr</code>)</p><h4 id="Redo-log"><a href="#Redo-log" class="headerlink" title="Redo log"></a>Redo log</h4><p>实现事务持久性，又重做日志缓冲区和重做日志文件组成。事务提交后会把所有修改信息都存在日志中。</p><h3 id="后台线程"><a href="#后台线程" class="headerlink" title="后台线程"></a>后台线程</h3><p>作用：在合适的时机将数据刷新到磁盘中</p><ul><li>Master Thread<ul><li>负责将缓冲区数据异步刷新到磁盘中，保持数据一致性；脏页刷新，合并插入缓存，undo页回收</li></ul></li><li>IO Thread<ul><li>Read thread</li><li>Write thread</li><li>Log thread 日志缓冲区刷入磁盘</li><li>Insert buffer thread 写缓冲区刷入磁盘</li></ul></li><li>Purge Thread<ul><li>回收事务已经提交的undo log</li></ul></li><li>Page Cleaner Thread<ul><li>协助Master Thread刷新脏页到磁盘的线程</li></ul></li></ul><h2 id="事务原理"><a href="#事务原理" class="headerlink" title="事务原理"></a>事务原理</h2><h3 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h3><p>不可分割的工作单位，事务的所有操作要么同时成功，要么同时失败</p><p>特点：ACID</p><blockquote><p>原子性、一致性、持久性由redo log、undo log保证， 隔离性由锁、MVCC保证</p></blockquote><h3 id="Redo-Log"><a href="#Redo-Log" class="headerlink" title="Redo Log"></a>Redo Log</h3><p>重做日志由重做日志缓冲以及重做日志文件组成，前者在内存中，后缀在磁盘中。</p><h3 id="Undo-Log"><a href="#Undo-Log" class="headerlink" title="Undo Log"></a>Undo Log</h3><p>回滚日志，记录数据被修改前的信息。作用：提供回滚和MVCC</p><p>undo log是逻辑日志，记录与当前操作效果相反的记录。</p><p>undo log在事务提交后，并不会删除undo log，这些日志可能会用在MVCC</p><p>undo log采用段的方式进行管理和记录，存放在rollback segment回滚段</p><h2 id="MVCC"><a href="#MVCC" class="headerlink" title="MVCC"></a>MVCC</h2><ul><li>当前读</li></ul><p>读取的记录是最新版本，且要保证其他并发事务不能修改当前记录</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> ... lock <span class="keyword">in</span> share mode</span><br><span class="line"><span class="keyword">select</span> ... <span class="keyword">for</span> <span class="keyword">update</span></span><br><span class="line"><span class="keyword">update</span></span><br><span class="line"><span class="keyword">insert</span></span><br><span class="line"><span class="keyword">delete</span></span><br></pre></td></tr></table></figure><ul><li>快照读</li></ul><p>简单的select就是快照读，读取的是记录数据的可见版本</p><ul><li><p>Read Committed 每次select都会生成一个快照读</p></li><li><p>Repeatable Read 开启事务后第一个select语句才是快照读的地方</p></li><li><p>Serializable 快照读会退化为当前读</p></li><li><p>MVCC</p></li></ul><p>全程：多版本并发控制，指维护一个数据的多个版本，是读写操作没有冲突。</p><p>MVCC具体实现依赖于数据库记录的三个隐式字段、undo log日志、readView</p><h3 id="隐藏字段"><a href="#隐藏字段" class="headerlink" title="隐藏字段"></a>隐藏字段</h3><ul><li><code>DB_TRX_ID</code> 最近改动事务ID，记录插入这条记录或最后一次修改该记录的事务ID</li><li><code>DB_ROLL_PTR</code>回滚指针，指向这条记录的上一个版本</li><li><code>DB_ROW_ID</code> 如果表结构没有主键，将会生成该隐藏字段</li></ul><h3 id="undo-log"><a href="#undo-log" class="headerlink" title="undo log"></a>undo log</h3><p>当insert的时候，产生的undo log日志只在回滚是需要，事务提交后可以立即删除</p><p>而update、delete的时候，产生的undo log日志不仅在回滚需要，快照读时也需要</p><p>对同一事务的修改会导致undolog生成一条记录版本链表，头部时最新的旧记录，尾部是最早的旧记录</p><h3 id="ReadView"><a href="#ReadView" class="headerlink" title="ReadView"></a>ReadView</h3><p>是快照读SQL指向时MVCC提取数据的依据</p><p>四个字段：</p><ul><li>m_ids 当前活跃事务ID集合&#x2F;尚未提交的事务ID集合</li><li>min_trx_id 最小活跃事务ID&#x2F;尚未提交的事务ID值</li><li>max_trx_id 预分配事务ID&#x2F;下次要生成的事务ID值</li><li>creator_trx_id ReadView创建者的事务ID</li></ul><p>规则：</p><p><img src="/./pics/image-20240828150848272.png" alt="image-20240828150848272"></p><ul><li>RC隔离级别下，在事务中每一次执行快照读时生成ReadView</li><li>RR隔离级别下，每一个事务最多生成一次ReadView</li></ul><p>关于事务、MVCC，这里推荐一个介绍视频：<a href="https://www.bilibili.com/video/BV1FW421d7DA/?spm_id_from=333.1007.top_right_bar_window_history.content.click&vd_source=dd291d3bf50e92741817346c92c84f80">面试官：你怎么理解MySQL事务和MVCC的？</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 数据库 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> MySQL </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>MySQL之锁</title>
       <link href="/2024/08/28/MySQL%E4%B9%8B%E9%94%81/"/>
       <url>/2024/08/28/MySQL%E4%B9%8B%E9%94%81/</url>
@@ -286,9 +311,9 @@
       
         <tags>
             
-            <tag> Golang </tag>
-            
             <tag> Grammar </tag>
+            
+            <tag> Golang </tag>
             
             <tag> Concurrent </tag>
             
@@ -346,9 +371,9 @@
       
         <tags>
             
-            <tag> Golang </tag>
-            
             <tag> Grammar </tag>
+            
+            <tag> Golang </tag>
             
         </tags>
       
@@ -373,9 +398,9 @@
       
         <tags>
             
-            <tag> Golang </tag>
-            
             <tag> Grammar </tag>
+            
+            <tag> Golang </tag>
             
         </tags>
       
