@@ -338,9 +338,9 @@
       
         <tags>
             
-            <tag> Golang </tag>
-            
             <tag> Grammar </tag>
+            
+            <tag> Golang </tag>
             
             <tag> Concurrent </tag>
             
@@ -398,9 +398,9 @@
       
         <tags>
             
-            <tag> Golang </tag>
-            
             <tag> Grammar </tag>
+            
+            <tag> Golang </tag>
             
         </tags>
       
@@ -425,9 +425,36 @@
       
         <tags>
             
+            <tag> Grammar </tag>
+            
             <tag> Golang </tag>
             
-            <tag> Grammar </tag>
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>MySQL之主从复制</title>
+      <link href="/2024/01/14/MySQL%E4%B9%8B%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/"/>
+      <url>/2024/01/14/MySQL%E4%B9%8B%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/</url>
+      
+        <content type="html"><![CDATA[<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>主从复制指主数据库的DDL和DML操作通过二进制日志传送到从库服务器，在从库上对这些日志重新执行，从而使得从库和主库的数据保持同步</p><p>MySQL支持链状复制，一个主库可以向多个从库进行复制</p><p>作用：</p><ul><li>主库故障，可以快速切换到从库提供服务</li><li>实现读写分离，降低主库的访问压力</li><li>从主库执行备份，避免备份期间影响主库服务</li></ul><h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p><img src="/./pics/image-20240829125228774.png" alt="image-20240829125228774"></p><ol><li>Master将DDL&#x2F;DML操作写入本地binlog</li><li>Slave的IO线程读取Master的binlog，并将其内容写入Slave本地的Relay log</li><li>Slave的SQL线程从中继日志Relay Log读取内容，并重做其中的时间，将改变反映到它自己的数据</li></ol><h2 id="搭建"><a href="#搭建" class="headerlink" title="搭建"></a>搭建</h2><h3 id="主库配置"><a href="#主库配置" class="headerlink" title="主库配置"></a>主库配置</h3><p>修改配置文件</p><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 要保证id在整个集群环境唯一</span><br><span class="line">server-id=<span class="number">1</span></span><br><span class="line"># <span class="number">1</span>表示只读，<span class="number">0</span>表示读写</span><br><span class="line">read-only=<span class="number">0</span></span><br></pre></td></tr></table></figure><blockquote><p>这里read-only仅针对普通用户，super用户仍有权限对数据库进行写操作；可以使用<code>super-read-only=1</code>限制super用户进行写操作</p></blockquote><p>重启服务后，主库还需要创建远程连接的账号，并赋予主从复制的权限</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">USER</span> <span class="string">&#x27;XXX&#x27;</span>@<span class="string">&#x27;XXX&#x27;</span> IDENTIFIED <span class="keyword">WITH</span> mysql_native_password <span class="keyword">BY</span> <span class="string">&#x27;XXX&#x27;</span></span><br><span class="line"><span class="keyword">GRANT</span> REPLICATION SLAVE <span class="keyword">ON</span> <span class="operator">*</span>.<span class="operator">*</span> <span class="keyword">TO</span> <span class="string">&#x27;XXX&#x27;</span>@<span class="string">&#x27;XXX&#x27;</span></span><br></pre></td></tr></table></figure><p>查看二进制日志坐标</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> master status;</span><br></pre></td></tr></table></figure><p>字段说明：</p><ul><li>file:从哪个文件开始推送日志文件</li><li>position:从哪个位置开始推送日志</li><li>binlog_ignore_db:指定不需要同步的数据库</li></ul><h3 id="从库配置"><a href="#从库配置" class="headerlink" title="从库配置"></a>从库配置</h3><p>修改配置文件</p><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">server-id=xxx</span><br><span class="line">read-only=<span class="number">1</span></span><br></pre></td></tr></table></figure><p>重启服务后，执行如下SQL语句</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># <span class="number">8.0</span><span class="number">.23</span>之后</span><br><span class="line">CHANGE REPLICATION SOURCE <span class="keyword">TO</span> SOURCE_HOST<span class="operator">=</span><span class="string">&#x27;XXX&#x27;</span>, SOURCE_USER<span class="operator">=</span><span class="string">&#x27;XXX&#x27;</span>, SOURCE_PASSWORD<span class="operator">=</span><span class="string">&#x27;XXX&#x27;</span>, SOURCE_LOG_FILE<span class="operator">=</span><span class="string">&#x27;XXX&#x27;</span>, SOURCE_LOG_POS<span class="operator">=</span><span class="string">&#x27;XXX&#x27;</span>;</span><br><span class="line"># <span class="number">8.0</span><span class="number">.23</span>之前</span><br><span class="line">CHANGE MASTER <span class="keyword">TO</span> MASTER_HOST<span class="operator">=</span><span class="string">&#x27;XXX&#x27;</span>, MASTER_USER<span class="operator">=</span><span class="string">&#x27;XXX&#x27;</span>, MASTER_PASSWORD<span class="operator">=</span><span class="string">&#x27;XXX&#x27;</span>, MASTER_LOG_FILE<span class="operator">=</span><span class="string">&#x27;XXX&#x27;</span>, MASTER_LOG_POS<span class="operator">=</span>XXX;</span><br></pre></td></tr></table></figure><p>启动主从复制：</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">start</span> replica; # <span class="number">8.0</span><span class="number">.22</span>之后</span><br><span class="line"><span class="keyword">start</span> slave; # <span class="number">8.0</span><span class="number">.23</span>之前</span><br></pre></td></tr></table></figure><p>查看主从复制状态(在从库执行)</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> replica status;</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> 数据库 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> MySQL </tag>
+            
+            <tag> Ops </tag>
             
         </tags>
       
