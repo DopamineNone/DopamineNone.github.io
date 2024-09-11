@@ -1,0 +1,12 @@
+- class_name: 鱼塘
+  class_desc: 参考资料
+  link_list:
+    - name: Butterfly
+      link: https://butterfly.js.org/
+      avatar: /img/favicon.png
+      descr: Hexo框架下的美化主题
+
+# - class_name: 友链
+#   class_desc: 那些人，那些事
+  # link_list:
+  #   - name: 

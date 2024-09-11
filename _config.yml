@@ -5,15 +5,15 @@
 # Site
 title: 多巴胺の小窝
 subtitle: 
-description: 'No~~~'
+description: '追求自发向上的成长'
 keywords:
 author: DopamineNone
-language: zh-Hans
+language: zh-CN
 timezone: Asia/Shanghai
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
-url: http://dopaminenone.github.io
+url: https://dopaminenone.github.io
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 pretty_urls:
@@ -103,6 +103,9 @@ theme: butterfly
 ## Docs: https://hexo.io/docs/one-command-deployment
 
 deploy:
-  type: git
-  repository: https://github.com/DopamineNone/DopamineNone.github.io.git 
-  branch: main
+  - type: git
+    repository: https://github.com/DopamineNone/DopamineNone.github.io.git 
+    branch: main
+  - type: 'git'
+    repository: https://gitee.com/dopamine-none/dopamine-none.git
+    branch: master
