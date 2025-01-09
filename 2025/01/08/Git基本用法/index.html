@@ -1,0 +1,398 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Git之基本工作目录|暂存区|版本库操作 | 多巴胺の小窝</title><meta name="author" content="DopamineNone"><meta name="copyright" content="DopamineNone"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="git的工作目录|暂存区|版本库|远程仓库 工作目录：是用户在本地进行文件操作的实际目录，即项目所在的目录。用户可以在工作目录中创建、修改、删除文件等，这些操作都是在本地进行的，尚未被 Git 跟踪和管理。 暂存区：也称为索引（Index），是工作目录和版本库之间的中间区域。当使用git add命令将文件添加到暂存区后，这些文件就准备好被提交到版本库中了。暂存区可以让用户将多次的文件修改组合成一个">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Git之基本工作目录|暂存区|版本库操作">
+<meta property="og:url" content="https://dopaminenone.github.io/2025/01/08/Git%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/index.html">
+<meta property="og:site_name" content="多巴胺の小窝">
+<meta property="og:description" content="git的工作目录|暂存区|版本库|远程仓库 工作目录：是用户在本地进行文件操作的实际目录，即项目所在的目录。用户可以在工作目录中创建、修改、删除文件等，这些操作都是在本地进行的，尚未被 Git 跟踪和管理。 暂存区：也称为索引（Index），是工作目录和版本库之间的中间区域。当使用git add命令将文件添加到暂存区后，这些文件就准备好被提交到版本库中了。暂存区可以让用户将多次的文件修改组合成一个">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://dopaminenone.github.io/img/avatar.png">
+<meta property="article:published_time" content="2025-01-08T04:00:00.000Z">
+<meta property="article:modified_time" content="2025-01-09T15:33:19.894Z">
+<meta property="article:author" content="DopamineNone">
+<meta property="article:tag" content="git">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://dopaminenone.github.io/img/avatar.png"><link rel="shortcut icon" href="/img/pad.png"><link rel="canonical" href="https://dopaminenone.github.io/2025/01/08/Git%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin=""/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?93140760943d4fd0d21f31347c4b5cfc";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-H8LXHWF190"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-H8LXHWF190');
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: DopamineNone","link":"链接: ","source":"来源: 多巴胺の小窝","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Git之基本工作目录|暂存区|版本库操作',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-01-09 23:33:19'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (false) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">21</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">17</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-heartbeat"></i><span> 生活</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 影视</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 其他</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></li><li><a class="site-page child" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/banner.png')"><nav id="nav"><span id="blog-info"><a href="/" title="多巴胺の小窝"><span class="site-name">多巴胺の小窝</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-heartbeat"></i><span> 生活</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 影视</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 其他</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></li><li><a class="site-page child" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Git之基本工作目录|暂存区|版本库操作</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon fas fa-history"></i><span class="post-meta-label">更新于</span><time datetime="2025-01-09T15:33:19.894Z" title="更新于 2025-01-09 23:33:19">2025-01-09</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Tool/">Tool</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Git之基本工作目录|暂存区|版本库操作"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="git的工作目录-暂存区-版本库-远程仓库"><a href="#git的工作目录-暂存区-版本库-远程仓库" class="headerlink" title="git的工作目录|暂存区|版本库|远程仓库"></a>git的工作目录|暂存区|版本库|远程仓库</h2><ul>
+<li><strong>工作目录</strong>：是用户在本地进行文件操作的实际目录，即项目所在的目录。用户可以在工作目录中创建、修改、删除文件等，这些操作都是在本地进行的，尚未被 Git 跟踪和管理。</li>
+<li><strong>暂存区</strong>：也称为索引（Index），是工作目录和版本库之间的中间区域。当使用<code>git add</code>命令将文件添加到暂存区后，这些文件就准备好被提交到版本库中了。暂存区可以让用户将多次的文件修改组合成一个逻辑上的提交。</li>
+<li><strong>版本库</strong>：也叫 Git 仓库，包含了项目的所有版本历史和相关的元数据，存储在隐藏的<code>.git</code>目录中。当执行<code>git commit</code>命令时，暂存区中的文件会被提交到版本库中，形成一个新的提交记录。</li>
+<li><strong>远程仓库</strong>：是位于网络上的共享版本库，用于团队成员之间共享和协作开发项目。远程仓库可以是自己搭建的服务器，也可以是像 GitHub、GitLab 这样的代码托管平台上的仓库。本地仓库可以与远程仓库进行同步，将本地的提交推送到远程仓库，或者从远程仓库拉取最新的提交。</li>
+</ul>
+<h2 id="git的文件状态"><a href="#git的文件状态" class="headerlink" title="git的文件状态"></a>git的文件状态</h2><p>git中文件有以下常见的4种状态：未跟踪、未修改、已修改、已暂存</p>
+<ul>
+<li><p><strong>未跟踪（Untracked）</strong></p>
+<ul>
+<li><p><strong>含义</strong>：文件在工作目录中，但尚未被 Git 纳入版本控制范围，Git 不知道有这个文件的存在。</p>
+</li>
+<li><p><strong>场景</strong>：当在工作目录中新建一个文件，还没有执行<code>git add</code>命令将其添加到暂存区时，该文件就处于未跟踪状态。比如在项目目录下新建了一个<code>new_file.txt</code>文件，此时<code>git status</code>命令的输出会显示该文件为未跟踪文件。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>已跟踪（Tracked）</strong></p>
+<ul>
+<li><strong>含义</strong>：文件已经被 Git 纳入版本控制，Git 会对其进行跟踪，记录文件的变更历史。已跟踪文件又可细分为以下三种状态。</li>
+<li><strong>unmodified（未修改）</strong><ul>
+<li><strong>含义</strong>：文件在工作目录中，且自从上次提交或更新后，其内容没有发生任何改变，与版本库中的对应版本保持一致。</li>
+<li><strong>示例</strong>：如果项目中有一个<code>styles.css</code>文件，在上次提交后没有对其进行任何编辑操作，那么它就处于<code>unmodified</code>状态。</li>
+</ul>
+</li>
+<li><strong>modified（已修改）</strong><ul>
+<li><strong>含义</strong>：文件在工作目录中被修改了，其内容与版本库中的对应版本不一致，Git 检测到了这种变化，但这些修改还未被添加到暂存区。</li>
+<li><strong>示例</strong>：对<code>styles.css</code>文件进行了样式调整，保存后，该文件就处于<code>modified</code>状态，<code>git status</code>命令会显示该文件被修改，提示可以选择将这些修改添加到暂存区或者丢弃。</li>
+</ul>
+</li>
+<li><strong>staged（已暂存）</strong><ul>
+<li><strong>含义</strong>：已修改的文件通过<code>git add</code>命令被添加到了暂存区，准备好被提交到版本库中，此时文件的修改会被包含在即将进行的提交中。</li>
+<li><strong>示例</strong>：在对<code>styles.css</code>文件修改后，执行<code>git add styles.css</code>，该文件就从<code>modified</code>状态变为<code>staged</code>状态，<code>git status</code>命令会显示该文件已被暂存，等待提交。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>以下所有操作都在实际工作目录下进行</p>
+</blockquote>
+<h2 id="本地工作目录-暂存区-版本库操作"><a href="#本地工作目录-暂存区-版本库操作" class="headerlink" title="本地工作目录|暂存区|版本库操作"></a>本地工作目录|暂存区|版本库操作</h2><h3 id="查看文件状态"><a href="#查看文件状态" class="headerlink" title="查看文件状态"></a>查看文件状态</h3><ul>
+<li><code>git status</code>: 使用<code>git status</code>命令可以查看当前工作目录和暂存区的状态，了解哪些文件被修改、新增或删除，以及哪些文件已被暂存准备提交。</li>
+</ul>
+<h3 id="查看提交历史"><a href="#查看提交历史" class="headerlink" title="查看提交历史"></a>查看提交历史</h3><ul>
+<li><code>git log</code>可以查看版本库的提交日志</li>
+</ul>
+<h3 id="初始化仓库"><a href="#初始化仓库" class="headerlink" title="初始化仓库"></a>初始化仓库</h3><ul>
+<li><code>git init</code>: 会将当前的目录初始化化为git仓库，生成一个隐藏文件夹<code>.git</code>，用于存储与版本控制相关的信息</li>
+</ul>
+<p>这里实践一下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git init</span></span><br><span class="line">Initialized empty Git repository in C:/Users/DopamineNone/Projects/git_test/.git/</span><br><span class="line"></span><br><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git status</span></span><br><span class="line">On branch master</span><br><span class="line"></span><br><span class="line">No commits yet</span><br><span class="line"></span><br><span class="line">nothing to commit (create/copy files and use &quot;git add&quot; to track)</span><br></pre></td></tr></table></figure>
+
+<p>可见刚初始化后的仓库什么都没有</p>
+<h3 id="添加至暂存区（untracked-modified-gt-staged）"><a href="#添加至暂存区（untracked-modified-gt-staged）" class="headerlink" title="添加至暂存区（untracked, modified -&gt; staged）"></a>添加至暂存区（untracked, modified -&gt; staged）</h3><ul>
+<li>git add [file]<ul>
+<li>这个操作的目的是为了将未跟踪或已修改状态的文件推至暂存区中</li>
+<li>可以用<code>git add .</code>将仓库中<strong>所有</strong>未跟踪或已修改状态的文件推至暂存区</li>
+</ul>
+</li>
+</ul>
+<p>实践一下：</p>
+<pre><code>1. 创建一个新文件file1.txt，查看状态(untracked)
+</code></pre>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">touch</span> file1.txt</span></span><br><span class="line"></span><br><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git status</span></span><br><span class="line">On branch master</span><br><span class="line"></span><br><span class="line">No commits yet</span><br><span class="line"></span><br><span class="line">Untracked files:</span><br><span class="line">  (use &quot;git add &lt;file&gt;...&quot; to include in what will be committed)</span><br><span class="line">        file1.txt</span><br><span class="line"></span><br><span class="line">nothing added to commit but untracked files present (use &quot;git add&quot; to track)</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>将file1.txt推送至暂存区，查看状态(staged，这里提示词为changes to be committed，即将要提交的变化); 状态变化：untracked -&gt; staged</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git add file1.txt</span></span><br><span class="line"></span><br><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git status</span></span><br><span class="line">On branch master</span><br><span class="line"></span><br><span class="line">No commits yet</span><br><span class="line"></span><br><span class="line">Changes to be committed:</span><br><span class="line">  (use &quot;git rm --cached &lt;file&gt;...&quot; to unstage)</span><br><span class="line">        new file:   file1.txt</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>修改file1.txt，查看状态(modified)；这里to be committed的是暂存区中file1.txt的快照；状态变化：staged -&gt; modified</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">echo</span> <span class="string">&quot;hello git&quot;</span> &gt; file1.txt</span></span><br><span class="line"></span><br><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git status</span></span><br><span class="line">On branch master</span><br><span class="line"></span><br><span class="line">No commits yet</span><br><span class="line"></span><br><span class="line">Changes to be committed:</span><br><span class="line">  (use &quot;git rm --cached &lt;file&gt;...&quot; to unstage)</span><br><span class="line">        new file:   file1.txt</span><br><span class="line"></span><br><span class="line">Changes not staged for commit:</span><br><span class="line">  (use &quot;git add &lt;file&gt;...&quot; to update what will be committed)</span><br><span class="line">  (use &quot;git restore &lt;file&gt;...&quot; to discard changes in working directory)</span><br><span class="line">        modified:   file1.txt</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>将file1.txt添加至暂存区，查看状态(staged); 状态变化（modifed -&gt; staged）；状态变化：modified -&gt; staged</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git add file1.txt</span></span><br><span class="line">warning: in the working copy of &#x27;file1.txt&#x27;, LF will be replaced by CRLF the next time Git touches it</span><br><span class="line"></span><br><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git status</span></span><br><span class="line">On branch master</span><br><span class="line"></span><br><span class="line">No commits yet</span><br><span class="line"></span><br><span class="line">Changes to be committed:</span><br><span class="line">  (use &quot;git rm --cached &lt;file&gt;...&quot; to unstage)</span><br><span class="line">        new file:   file1.txt</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="提交暂存区文件-staged-gt-unmodified"><a href="#提交暂存区文件-staged-gt-unmodified" class="headerlink" title="提交暂存区文件(staged -&gt; unmodified)"></a>提交暂存区文件(staged -&gt; unmodified)</h3><p><code>git commit -m &quot;message&quot;</code>提交暂存区内容至版本库</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git commit -m <span class="string">&quot;init project&quot;</span></span></span><br><span class="line">[master (root-commit) 1384bf0] init project</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br><span class="line"> create mode 100644 file1.txt</span><br><span class="line"></span><br><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git status</span></span><br><span class="line">On branch master</span><br><span class="line">nothing to commit, working tree clean</span><br><span class="line"></span><br><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git <span class="built_in">log</span></span></span><br><span class="line">commit 1384bf0b39111d1f33ffb501f609d0c88797f422 (HEAD -&gt; master)</span><br><span class="line">Author: DopamineNone &lt;c20160419raytheon@163.com&gt;</span><br><span class="line">Date:   Wed Jan 8 13:39:46 2025 +0800</span><br><span class="line">    init project</span><br></pre></td></tr></table></figure>
+
+<h3 id="查看不同区域-x2F-分支的差异"><a href="#查看不同区域-x2F-分支的差异" class="headerlink" title="查看不同区域&#x2F;分支的差异"></a>查看不同区域&#x2F;分支的差异</h3><ul>
+<li><code>git diff</code>可以显示不同区域&#x2F;分支中的内容差异，包括</li>
+</ul>
+<h4 id="查看工作目录与暂存区的差异"><a href="#查看工作目录与暂存区的差异" class="headerlink" title="查看工作目录与暂存区的差异"></a>查看工作目录与暂存区的差异</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">echo</span> <span class="string">&quot;hello world&quot;</span> &gt; file1.txt</span></span><br><span class="line"></span><br><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git diff file1.txt</span></span><br><span class="line">warning: in the working copy of &#x27;file1.txt&#x27;, LF will be replaced by CRLF the next time Git touches it</span><br><span class="line">diff --git a/file1.txt b/file1.txt</span><br><span class="line">index 8d0e412..3b18e51 100644</span><br><span class="line">--- a/file1.txt</span><br><span class="line">+++ b/file1.txt</span><br><span class="line">@@ -1 +1 @@</span><br><span class="line">-hello git</span><br><span class="line">+hello world</span><br></pre></td></tr></table></figure>
+
+<h4 id="查看暂存区与版本库的差异"><a href="#查看暂存区与版本库的差异" class="headerlink" title="查看暂存区与版本库的差异"></a>查看暂存区与版本库的差异</h4><p>需要加上选项<code>--staged</code>或<code>--cached</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git add file1.txt</span></span><br><span class="line">warning: in the working copy of &#x27;file1.txt&#x27;, LF will be replaced by CRLF the next time Git touches it</span><br><span class="line"></span><br><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git diff --staged file1.txt</span></span><br><span class="line">diff --git a/file1.txt b/file1.txt</span><br><span class="line">index 8d0e412..3b18e51 100644</span><br><span class="line">--- a/file1.txt</span><br><span class="line">+++ b/file1.txt</span><br><span class="line">@@ -1 +1 @@</span><br><span class="line">-hello git</span><br><span class="line">+hello world</span><br></pre></td></tr></table></figure>
+
+<h4 id="查看不同提交版本间的差异"><a href="#查看不同提交版本间的差异" class="headerlink" title="查看不同提交版本间的差异"></a>查看不同提交版本间的差异</h4><p><code>git diff &lt;commit1&gt; &lt;commit2&gt;</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git commit -m <span class="string">&quot;replace git by world&quot;</span></span></span><br><span class="line">[master 407586a] replace git by world</span><br><span class="line"> 1 file changed, 1 insertion(+), 1 deletion(-)</span><br><span class="line"></span><br><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git <span class="built_in">log</span></span></span><br><span class="line">commit 407586abfd0b5a0239e63dc582abbd5d752edaa0 (HEAD -&gt; master)</span><br><span class="line">Author: DopamineNone &lt;xxx&gt;</span><br><span class="line">Date:   Thu Jan 9 21:05:26 2025 +0800</span><br><span class="line"></span><br><span class="line">    replace git by world</span><br><span class="line"></span><br><span class="line">commit 1384bf0b39111d1f33ffb501f609d0c88797f422</span><br><span class="line">Author: DopamineNone &lt;xxx&gt;</span><br><span class="line">Date:   Wed Jan 8 13:39:46 2025 +0800</span><br><span class="line"></span><br><span class="line">    init project</span><br><span class="line"></span><br><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git diff 407586abfd0b5a0239e63dc582abbd5d752edaa0 1384bf0b39111d1f33ffb501f609d0c88797f422</span></span><br><span class="line">diff --git a/file1.txt b/file1.txt</span><br><span class="line">index 3b18e51..8d0e412 100644</span><br><span class="line">--- a/file1.txt</span><br><span class="line">+++ b/file1.txt</span><br><span class="line">@@ -1 +1 @@</span><br><span class="line">-hello world</span><br><span class="line">+hello git</span><br></pre></td></tr></table></figure>
+
+<h4 id="查看两个分支之间的差异"><a href="#查看两个分支之间的差异" class="headerlink" title="查看两个分支之间的差异"></a>查看两个分支之间的差异</h4><p><code>git diff &lt;branch1&gt; &lt;branch2&gt;</code>，暂不做演示</p>
+<h3 id="撤销工作目录的修改（modified-gt-unmodified-staged）"><a href="#撤销工作目录的修改（modified-gt-unmodified-staged）" class="headerlink" title="撤销工作目录的修改（modified -&gt; unmodified | staged）"></a>撤销工作目录的修改（modified -&gt; unmodified | staged）</h3><p><strong>这里撤销的只是还没提交至暂存区中的修改</strong></p>
+<ol>
+<li>将file1.txt的内容清空，查看状态（modified）</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">echo</span> <span class="string">&quot;&quot;</span> &gt; file1.txt</span></span><br><span class="line"></span><br><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git status</span></span><br><span class="line">On branch master</span><br><span class="line"></span><br><span class="line">No commits yet</span><br><span class="line"></span><br><span class="line">Changes to be committed:</span><br><span class="line">  (use &quot;git rm --cached &lt;file&gt;...&quot; to unstage)</span><br><span class="line">        new file:   file1.txt</span><br><span class="line"></span><br><span class="line">Changes not staged for commit:</span><br><span class="line">  (use &quot;git add &lt;file&gt;...&quot; to update what will be committed)</span><br><span class="line">  (use &quot;git restore &lt;file&gt;...&quot; to discard changes in working directory)</span><br><span class="line">        modified:   file1.txt</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>使用<code>git restore &lt;file&gt;</code>命令撤回修改</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git restore file1.txt</span></span><br><span class="line"></span><br><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git status</span></span><br><span class="line">On branch master</span><br><span class="line"></span><br><span class="line">No commits yet</span><br><span class="line"></span><br><span class="line">Changes to be committed:</span><br><span class="line">  (use &quot;git rm --cached &lt;file&gt;...&quot; to unstage)</span><br><span class="line">        new file:   file1.txt</span><br></pre></td></tr></table></figure>
+
+<h3 id="撤销暂存区的修改"><a href="#撤销暂存区的修改" class="headerlink" title="撤销暂存区的修改"></a>撤销暂存区的修改</h3><p>这里分两种情况：</p>
+<ol>
+<li>仅将暂存区中文件内容恢复至最近的提交版本，但不修改工作区的文件内容</li>
+<li>将暂存区和工作区中的文件内容恢复至最近的提交中</li>
+</ol>
+<h4 id="仅撤销暂存区的修改"><a href="#仅撤销暂存区的修改" class="headerlink" title="仅撤销暂存区的修改"></a>仅撤销暂存区的修改</h4><p>使用<code>git reset &lt;file&gt;</code>或<code>git restore --staged &lt;file&gt;</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">echo</span> <span class="string">&quot;&quot;</span> &gt; file1.txt</span></span><br><span class="line"></span><br><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git add file1.txt</span></span><br><span class="line">warning: in the working copy of &#x27;file1.txt&#x27;, LF will be replaced by CRLF the next time Git touches it</span><br><span class="line"></span><br><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git diff --staged file1.txt</span></span><br><span class="line">diff --git a/file1.txt b/file1.txt</span><br><span class="line">index 3b18e51..8b13789 100644</span><br><span class="line">--- a/file1.txt</span><br><span class="line">+++ b/file1.txt</span><br><span class="line">@@ -1 +1 @@</span><br><span class="line">-hello world</span><br><span class="line">+</span><br><span class="line"></span><br><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git reset file1.txt</span></span><br><span class="line">Unstaged changes after reset:</span><br><span class="line">M       file1.txt</span><br><span class="line"></span><br><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git diff --staged file1.txt</span></span><br><span class="line"></span><br><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git diff file1.txt</span></span><br><span class="line">warning: in the working copy of &#x27;file1.txt&#x27;, LF will be replaced by CRLF the next time Git touches it</span><br><span class="line">diff --git a/file1.txt b/file1.txt</span><br><span class="line">index 3b18e51..8b13789 100644</span><br><span class="line">--- a/file1.txt</span><br><span class="line">+++ b/file1.txt</span><br><span class="line">@@ -1 +1 @@</span><br><span class="line">-hello world</span><br><span class="line">+</span><br></pre></td></tr></table></figure>
+
+<h4 id="撤销工作目录和暂存区的修改"><a href="#撤销工作目录和暂存区的修改" class="headerlink" title="撤销工作目录和暂存区的修改"></a>撤销工作目录和暂存区的修改</h4><p>使用<code>git checkout HEAD &lt;file&gt;</code>命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git add file1.txt</span></span><br><span class="line">warning: in the working copy of &#x27;file1.txt&#x27;, LF will be replaced by CRLF the next time Git touches it</span><br><span class="line"></span><br><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git diff file1.txt</span></span><br><span class="line"></span><br><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git diff --staged file1.txt</span></span><br><span class="line">diff --git a/file1.txt b/file1.txt</span><br><span class="line">index 3b18e51..8b13789 100644</span><br><span class="line">--- a/file1.txt</span><br><span class="line">+++ b/file1.txt</span><br><span class="line">@@ -1 +1 @@</span><br><span class="line">-hello world</span><br><span class="line">+</span><br><span class="line"></span><br><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git checkout HEAD file1.txt</span></span><br><span class="line">Updated 1 path from 8242445</span><br><span class="line"></span><br><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git diff --staged file1.txt</span></span><br><span class="line"></span><br><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git diff file1.txt</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="撤销提交记录"><a href="#撤销提交记录" class="headerlink" title="撤销提交记录"></a>撤销提交记录</h3><p>撤销提交可以由两种git命令实现: <code>git reset</code>和<code>git revert</code>，但两者的效果不同</p>
+<p><code>git reset [option] &lt;commit&gt;</code> 分为三种情况：</p>
+<ol>
+<li>仅将目标版本之后commit移出，不改变暂存区和工作目录的内容</li>
+<li>将目标版本之后commit移出，恢复暂存区内容为当前版本，但不改变工作目录内容</li>
+<li>将版本库、暂存区、工作目录的内容恢复至目标提交版本。</li>
+</ol>
+<p>而<code>git revert &lt;commit&gt;</code>表示，提交一个与目标commit的效果相反的commit，从而实现仅撤回某一版本的变化的效果（例如：commit1为在之前版本上新增了func1，那么git revert commit1作用为提交一个删除了func1的commit），撤回的影响包括版本库，暂存区和工作目录</p>
+<h4 id="仅撤销版本库提交"><a href="#仅撤销版本库提交" class="headerlink" title="仅撤销版本库提交"></a>仅撤销版本库提交</h4><p>使用<code>git reset --soft &lt;commit&gt;</code>表示撤回到哪个提交记录，如果仅撤回最近的一次提交，可以使用<code>git reset --soft HEAD~1</code>, HEAD指向本分支最新的提交，~1表示HEAD的前一次提交</p>
+<p>下面将git记录回溯至“hello git”</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git <span class="built_in">log</span></span></span><br><span class="line">commit 407586abfd0b5a0239e63dc582abbd5d752edaa0 (HEAD -&gt; master)</span><br><span class="line">Author: DopamineNone &lt;xxx&gt;</span><br><span class="line">Date:   Thu Jan 9 21:05:26 2025 +0800</span><br><span class="line"></span><br><span class="line">    replace git by world</span><br><span class="line"></span><br><span class="line">commit 1384bf0b39111d1f33ffb501f609d0c88797f422</span><br><span class="line">Author: DopamineNone &lt;xxx&gt;</span><br><span class="line">Date:   Wed Jan 8 13:39:46 2025 +0800</span><br><span class="line"></span><br><span class="line">    init project</span><br><span class="line"></span><br><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git reset --soft HEAD~1</span></span><br><span class="line"></span><br><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git diff --staged file1.txt</span></span><br><span class="line">diff --git a/file1.txt b/file1.txt</span><br><span class="line">index 8d0e412..3b18e51 100644</span><br><span class="line">--- a/file1.txt</span><br><span class="line">+++ b/file1.txt</span><br><span class="line">@@ -1 +1 @@</span><br><span class="line">-hello git</span><br><span class="line">+hello world</span><br></pre></td></tr></table></figure>
+
+<h4 id="仅撤销版本库提交和恢复暂存区"><a href="#仅撤销版本库提交和恢复暂存区" class="headerlink" title="仅撤销版本库提交和恢复暂存区"></a>仅撤销版本库提交和恢复暂存区</h4><p>使用<code>git reset &lt;commit&gt;</code>即可，等同于<code>git reset --mixed &lt;commit&gt;</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git commit -m <span class="string">&quot;replace git by world 2&quot;</span></span></span><br><span class="line">[master b166262] replace git by world 2</span><br><span class="line"> 1 file changed, 1 insertion(+), 1 deletion(-)</span><br><span class="line"></span><br><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git <span class="built_in">log</span></span></span><br><span class="line">commit b166262647db5d50e1ea59f644f59845f6fc002b (HEAD -&gt; master)</span><br><span class="line">Author: DopamineNone &lt;xxx&gt;</span><br><span class="line">Date:   Thu Jan 9 21:34:08 2025 +0800</span><br><span class="line"></span><br><span class="line">    replace git by world 2</span><br><span class="line"></span><br><span class="line">commit 1384bf0b39111d1f33ffb501f609d0c88797f422</span><br><span class="line">Author: DopamineNone &lt;xxx&gt;</span><br><span class="line">Date:   Wed Jan 8 13:39:46 2025 +0800</span><br><span class="line"></span><br><span class="line">    init project</span><br><span class="line"></span><br><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git reset HEAD~1</span></span><br><span class="line">Unstaged changes after reset:</span><br><span class="line">M       file1.txt</span><br><span class="line"></span><br><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git diff --staged file1.txt</span></span><br><span class="line"></span><br><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git diff file1.txt</span></span><br><span class="line">diff --git a/file1.txt b/file1.txt</span><br><span class="line">index 8d0e412..3b18e51 100644</span><br><span class="line">--- a/file1.txt</span><br><span class="line">+++ b/file1.txt</span><br><span class="line">@@ -1 +1 @@</span><br><span class="line">-hello git</span><br><span class="line">+hello world</span><br></pre></td></tr></table></figure>
+
+<h4 id="撤销所有区域的变化至上个提交"><a href="#撤销所有区域的变化至上个提交" class="headerlink" title="撤销所有区域的变化至上个提交"></a>撤销所有区域的变化至上个提交</h4><p>使用<code>git reset --hard &lt;commit&gt;</code>，下例中工作区的内容最后也被回溯至”hello git”</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git add file1.txt</span></span><br><span class="line"></span><br><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git commit -m <span class="string">&quot;replace git by world 3&quot;</span></span></span><br><span class="line">[master e2f0737] replace git by world 3</span><br><span class="line"> 1 file changed, 1 insertion(+), 1 deletion(-)</span><br><span class="line"></span><br><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git reset --hard HEAD~1</span></span><br><span class="line">HEAD is now at 1384bf0 init project</span><br><span class="line"></span><br><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git diff file1.txt</span></span><br><span class="line"></span><br><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">cat</span> file1.txt</span></span><br><span class="line">hello git</span><br></pre></td></tr></table></figure>
+
+<h4 id="仅撤回某一版本的变化"><a href="#仅撤回某一版本的变化" class="headerlink" title="仅撤回某一版本的变化"></a>仅撤回某一版本的变化</h4><p>通过<code>git revert &lt;commit1&gt;</code>实现，如：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">echo</span> <span class="string">&quot; world&quot;</span> &gt;&gt; file1.txt</span></span><br><span class="line"></span><br><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">cat</span> file1.txt</span></span><br><span class="line">hello git</span><br><span class="line"> world</span><br><span class="line"></span><br><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git add file1.txt</span></span><br><span class="line">warning: in the working copy of &#x27;file1.txt&#x27;, LF will be replaced by CRLF the next time Git touches it</span><br><span class="line"></span><br><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git commit -m <span class="string">&quot;add world&quot;</span></span></span><br><span class="line">[master bc2c3ea] add world</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br><span class="line"></span><br><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git revert HEAD</span></span><br><span class="line">[master a52db43] Revert &quot;add world&quot;</span><br><span class="line"> 1 file changed, 1 deletion(-)</span><br><span class="line"></span><br><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git <span class="built_in">log</span></span></span><br><span class="line">commit a52db43677856b9e37e880308c3581bdb53f34eb (HEAD -&gt; master)</span><br><span class="line">Author: DopamineNone &lt;xxx&gt;</span><br><span class="line">Date:   Thu Jan 9 22:38:33 2025 +0800</span><br><span class="line"></span><br><span class="line">    Revert &quot;add world&quot;</span><br><span class="line"></span><br><span class="line">    This reverts commit bc2c3ea660eea6c38d5d3c8ca03f51935a1028ec.</span><br><span class="line"></span><br><span class="line">commit bc2c3ea660eea6c38d5d3c8ca03f51935a1028ec</span><br><span class="line">Author: DopamineNone &lt;xxx&gt;</span><br><span class="line">Date:   Thu Jan 9 22:33:29 2025 +0800</span><br><span class="line"></span><br><span class="line">    add world</span><br><span class="line"></span><br><span class="line">commit 1384bf0b39111d1f33ffb501f609d0c88797f422</span><br><span class="line">Author: DopamineNone &lt;xxx&gt;</span><br><span class="line">Date:   Wed Jan 8 13:39:46 2025 +0800</span><br><span class="line"></span><br><span class="line">    init project</span><br><span class="line"></span><br><span class="line">DopamineNone@DM MINGW64 ~/Projects/git_test (master)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">cat</span> file1.txt</span></span><br><span class="line">hello git</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>git reset 和 git revert的区别：</p>
+<ol>
+<li>git reset的作用是撤回至先前的某个版本，而git revert是通过提交一个相反的commit，仅“撤回”某个版本的变化</li>
+<li>当撤回一个公共分支（多人合作使用的分支）的某个commit时，用于公共分支的commit只增不减（若删除了公共分支的commit，会导致与其他人的本地分支产生冲突），因此这时候使用git revert最稳妥；但如果时个人分支（即该分支不会被他人直接引用），可以使用git reset 配合 git push -f实现提交撤回，并使日志更加简洁</li>
+</ol>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://dopaminenone.github.io">DopamineNone</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://dopaminenone.github.io/2025/01/08/Git%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/">https://dopaminenone.github.io/2025/01/08/Git%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://dopaminenone.github.io" target="_blank">多巴胺の小窝</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/git/">git</a></div><div class="post_share"></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat.png" target="_blank"><img class="post-qr-code-img" src="/img/wechat.png" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/img/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="/img/alipay.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2024/09/05/Redis%E5%BA%95%E5%B1%82%E4%B8%AD%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" title="Redis底层中的数据结构"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Redis底层中的数据结构</div></div></a></div></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">DopamineNone</div><div class="author-info__description">追求自发向上的成长</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">21</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">17</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/DopamineNone"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/DopamineNone" target="_blank" title="GitHub"><i class="fab fa-github" style="color: ;"></i></a><a class="social-icon" href="mailto:dopaminenone@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: ;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">本博客尚未加速，请耐心等待加载...</br>网址1：</br>https://dopamine-none.gitee.io/</br>网址2：</br>https://dopaminenone.github.io/</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#git%E7%9A%84%E5%B7%A5%E4%BD%9C%E7%9B%AE%E5%BD%95-%E6%9A%82%E5%AD%98%E5%8C%BA-%E7%89%88%E6%9C%AC%E5%BA%93-%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93"><span class="toc-number">1.</span> <span class="toc-text">git的工作目录|暂存区|版本库|远程仓库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git%E7%9A%84%E6%96%87%E4%BB%B6%E7%8A%B6%E6%80%81"><span class="toc-number">2.</span> <span class="toc-text">git的文件状态</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0%E5%B7%A5%E4%BD%9C%E7%9B%AE%E5%BD%95-%E6%9A%82%E5%AD%98%E5%8C%BA-%E7%89%88%E6%9C%AC%E5%BA%93%E6%93%8D%E4%BD%9C"><span class="toc-number">3.</span> <span class="toc-text">本地工作目录|暂存区|版本库操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6%E7%8A%B6%E6%80%81"><span class="toc-number">3.1.</span> <span class="toc-text">查看文件状态</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%8F%90%E4%BA%A4%E5%8E%86%E5%8F%B2"><span class="toc-number">3.2.</span> <span class="toc-text">查看提交历史</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E4%BB%93%E5%BA%93"><span class="toc-number">3.3.</span> <span class="toc-text">初始化仓库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E8%87%B3%E6%9A%82%E5%AD%98%E5%8C%BA%EF%BC%88untracked-modified-gt-staged%EF%BC%89"><span class="toc-number">3.4.</span> <span class="toc-text">添加至暂存区（untracked, modified -&gt; staged）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8F%90%E4%BA%A4%E6%9A%82%E5%AD%98%E5%8C%BA%E6%96%87%E4%BB%B6-staged-gt-unmodified"><span class="toc-number">3.5.</span> <span class="toc-text">提交暂存区文件(staged -&gt; unmodified)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E4%B8%8D%E5%90%8C%E5%8C%BA%E5%9F%9F-x2F-%E5%88%86%E6%94%AF%E7%9A%84%E5%B7%AE%E5%BC%82"><span class="toc-number">3.6.</span> <span class="toc-text">查看不同区域&#x2F;分支的差异</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E5%B7%A5%E4%BD%9C%E7%9B%AE%E5%BD%95%E4%B8%8E%E6%9A%82%E5%AD%98%E5%8C%BA%E7%9A%84%E5%B7%AE%E5%BC%82"><span class="toc-number">3.6.1.</span> <span class="toc-text">查看工作目录与暂存区的差异</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%9A%82%E5%AD%98%E5%8C%BA%E4%B8%8E%E7%89%88%E6%9C%AC%E5%BA%93%E7%9A%84%E5%B7%AE%E5%BC%82"><span class="toc-number">3.6.2.</span> <span class="toc-text">查看暂存区与版本库的差异</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E4%B8%8D%E5%90%8C%E6%8F%90%E4%BA%A4%E7%89%88%E6%9C%AC%E9%97%B4%E7%9A%84%E5%B7%AE%E5%BC%82"><span class="toc-number">3.6.3.</span> <span class="toc-text">查看不同提交版本间的差异</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E4%B8%A4%E4%B8%AA%E5%88%86%E6%94%AF%E4%B9%8B%E9%97%B4%E7%9A%84%E5%B7%AE%E5%BC%82"><span class="toc-number">3.6.4.</span> <span class="toc-text">查看两个分支之间的差异</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%92%A4%E9%94%80%E5%B7%A5%E4%BD%9C%E7%9B%AE%E5%BD%95%E7%9A%84%E4%BF%AE%E6%94%B9%EF%BC%88modified-gt-unmodified-staged%EF%BC%89"><span class="toc-number">3.7.</span> <span class="toc-text">撤销工作目录的修改（modified -&gt; unmodified | staged）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%92%A4%E9%94%80%E6%9A%82%E5%AD%98%E5%8C%BA%E7%9A%84%E4%BF%AE%E6%94%B9"><span class="toc-number">3.8.</span> <span class="toc-text">撤销暂存区的修改</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%85%E6%92%A4%E9%94%80%E6%9A%82%E5%AD%98%E5%8C%BA%E7%9A%84%E4%BF%AE%E6%94%B9"><span class="toc-number">3.8.1.</span> <span class="toc-text">仅撤销暂存区的修改</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%92%A4%E9%94%80%E5%B7%A5%E4%BD%9C%E7%9B%AE%E5%BD%95%E5%92%8C%E6%9A%82%E5%AD%98%E5%8C%BA%E7%9A%84%E4%BF%AE%E6%94%B9"><span class="toc-number">3.8.2.</span> <span class="toc-text">撤销工作目录和暂存区的修改</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%92%A4%E9%94%80%E6%8F%90%E4%BA%A4%E8%AE%B0%E5%BD%95"><span class="toc-number">3.9.</span> <span class="toc-text">撤销提交记录</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%85%E6%92%A4%E9%94%80%E7%89%88%E6%9C%AC%E5%BA%93%E6%8F%90%E4%BA%A4"><span class="toc-number">3.9.1.</span> <span class="toc-text">仅撤销版本库提交</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%85%E6%92%A4%E9%94%80%E7%89%88%E6%9C%AC%E5%BA%93%E6%8F%90%E4%BA%A4%E5%92%8C%E6%81%A2%E5%A4%8D%E6%9A%82%E5%AD%98%E5%8C%BA"><span class="toc-number">3.9.2.</span> <span class="toc-text">仅撤销版本库提交和恢复暂存区</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%92%A4%E9%94%80%E6%89%80%E6%9C%89%E5%8C%BA%E5%9F%9F%E7%9A%84%E5%8F%98%E5%8C%96%E8%87%B3%E4%B8%8A%E4%B8%AA%E6%8F%90%E4%BA%A4"><span class="toc-number">3.9.3.</span> <span class="toc-text">撤销所有区域的变化至上个提交</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%85%E6%92%A4%E5%9B%9E%E6%9F%90%E4%B8%80%E7%89%88%E6%9C%AC%E7%9A%84%E5%8F%98%E5%8C%96"><span class="toc-number">3.9.4.</span> <span class="toc-text">仅撤回某一版本的变化</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/01/08/Git%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/" title="Git之基本工作目录|暂存区|版本库操作">Git之基本工作目录|暂存区|版本库操作</a><time datetime="2025-01-08T04:00:00.000Z" title="发表于 2025-01-08 12:00:00">2025-01-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/09/05/Redis%E5%BA%95%E5%B1%82%E4%B8%AD%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" title="Redis底层中的数据结构">Redis底层中的数据结构</a><time datetime="2024-09-05T04:00:00.000Z" title="发表于 2024-09-05 12:00:00">2024-09-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/08/29/MySQL%E4%B9%8B%E6%97%A5%E5%BF%97/" title="MySQL之日志">MySQL之日志</a><time datetime="2024-08-29T04:14:00.000Z" title="发表于 2024-08-29 12:14:00">2024-08-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/08/28/MySQL%E4%B9%8BInnoDB%E5%BC%95%E6%93%8E/" title="MySQL之InnoDB引擎">MySQL之InnoDB引擎</a><time datetime="2024-08-28T05:33:00.000Z" title="发表于 2024-08-28 13:33:00">2024-08-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/08/28/MySQL%E4%B9%8B%E9%94%81/" title="MySQL之锁">MySQL之锁</a><time datetime="2024-08-28T00:46:00.000Z" title="发表于 2024-08-28 08:46:00">2024-08-28</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/img/banner.png')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By DopamineNone</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Welcome to my blog!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '935a45e292e7aefc49f5',
+      clientSecret: '4f0120383b37695a558ebab1ed09ee8e3c89d0d4',
+      repo: 'dopaminenone.github.io',
+      owner: 'DopamineNone',
+      admin: ['DopamineNone'],
+      id: '951746c00b7ab4fb1e3d470ce565468a',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.textContent= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !false) {
+  if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
