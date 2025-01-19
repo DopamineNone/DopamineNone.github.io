@@ -1,0 +1,379 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Golang之Cobra基本使用 | 多巴胺の小窝</title><meta name="author" content="DopamineNone"><meta name="copyright" content="DopamineNone"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="本博客通过构建命令行工具to-do-list来介绍cobra的基本使用方式。工具的功能参考Task Tracker 获取cobra1go get -u github.com&#x2F;spf13&#x2F;cobra@latest cobra.Command创建工作目录，结构如下： 123456.├── cmd│   └── root.go├── go.mod├── go.sum└── main.go  cmd目录下">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Golang之Cobra基本使用">
+<meta property="og:url" content="https://dopaminenone.github.io/2025/01/10/Golang%E4%B9%8BCobra%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:site_name" content="多巴胺の小窝">
+<meta property="og:description" content="本博客通过构建命令行工具to-do-list来介绍cobra的基本使用方式。工具的功能参考Task Tracker 获取cobra1go get -u github.com&#x2F;spf13&#x2F;cobra@latest cobra.Command创建工作目录，结构如下： 123456.├── cmd│   └── root.go├── go.mod├── go.sum└── main.go  cmd目录下">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://dopaminenone.github.io/img/avatar.png">
+<meta property="article:published_time" content="2025-01-10T08:28:09.000Z">
+<meta property="article:modified_time" content="2025-01-19T00:22:43.616Z">
+<meta property="article:author" content="DopamineNone">
+<meta property="article:tag" content="Golang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://dopaminenone.github.io/img/avatar.png"><link rel="shortcut icon" href="/img/pad.png"><link rel="canonical" href="https://dopaminenone.github.io/2025/01/10/Golang%E4%B9%8BCobra%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin=""/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?93140760943d4fd0d21f31347c4b5cfc";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-H8LXHWF190"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-H8LXHWF190');
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: DopamineNone","link":"链接: ","source":"来源: 多巴胺の小窝","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Golang之Cobra基本使用',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-01-19 08:22:43'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (false) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">25</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">19</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-heartbeat"></i><span> 生活</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 影视</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 其他</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></li><li><a class="site-page child" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/banner.png')"><nav id="nav"><span id="blog-info"><a href="/" title="多巴胺の小窝"><span class="site-name">多巴胺の小窝</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-heartbeat"></i><span> 生活</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 影视</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 其他</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></li><li><a class="site-page child" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Golang之Cobra基本使用</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon fas fa-history"></i><span class="post-meta-label">更新于</span><time datetime="2025-01-19T00:22:43.616Z" title="更新于 2025-01-19 08:22:43">2025-01-19</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Golang/">Golang</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Golang之Cobra基本使用"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>本博客通过构建命令行工具to-do-list来介绍cobra的基本使用方式。工具的功能参考<a target="_blank" rel="noopener" href="https://roadmap.sh/projects/task-tracker">Task Tracker</a></p>
+<h2 id="获取cobra"><a href="#获取cobra" class="headerlink" title="获取cobra"></a>获取cobra</h2><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go get -u github.com/spf13/cobra@latest</span><br></pre></td></tr></table></figure>
+<h2 id="cobra-Command"><a href="#cobra-Command" class="headerlink" title="cobra.Command"></a>cobra.Command</h2><p>创建工作目录，结构如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── cmd</span><br><span class="line">│   └── root.go</span><br><span class="line">├── go.mod</span><br><span class="line">├── go.sum</span><br><span class="line">└── main.go</span><br></pre></td></tr></table></figure>
+
+<p><code>cmd</code>目录下编写和命令行处理相关的模块，其中cobra中的核心就是<code>cobra.Command</code>结构体，以下是其最基本的的几个字段</p>
+<ul>
+<li><code>Use</code>：当前命令的用法（根命令不需要），并取其第一个单词作为命令的标识符</li>
+<li><code>Short</code>：当前命令的简短说明</li>
+<li><code>Long</code>：当前命令的长说明</li>
+<li><code>Run</code>：当前命令的处理函数，类型为<code>func(cmd *cobra.Command，args []string)</code></li>
+<li><code>RunE</code>：当前命令的处理函数，类型为<code>func(cmd *cobra.Command, args []string) error</code>，返回的错误能够被<code>Execute()</code>方法返回</li>
+</ul>
+<p>常用的方法：</p>
+<ul>
+<li><code>Execute() error</code>，解析命令行，并在cmd数中找到匹配的命令进行处理，返回可能的错误</li>
+<li><code>AddCommand(cmd *cobra.Command)</code>，在当前命令下添加子命令</li>
+</ul>
+<p>其他常用的字段和方法也会在后文中介绍到。</p>
+<h2 id="初始化项目"><a href="#初始化项目" class="headerlink" title="初始化项目"></a>初始化项目</h2><p><code>cmd/root.go</code>：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> cmd</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">	<span class="string">&quot;github.com/spf13/cobra&quot;</span></span><br><span class="line">	<span class="string">&quot;os&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> rootCmd = &amp;cobra.Command&#123;</span><br><span class="line">	Short: <span class="string">&quot;Todo App&quot;</span>,</span><br><span class="line">	Run: <span class="function"><span class="keyword">func</span><span class="params">(cmd *cobra.Command, args []<span class="type">string</span>)</span></span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;Hello ToDo_JSON! v1.0.0&quot;</span>)</span><br><span class="line">	&#125;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 封装root命令</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Execute</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">if</span> err := rootCmd.Execute(); err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(err)</span><br><span class="line">		os.Exit(<span class="number">1</span>)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>main.go</code>中调用命令行处理接口。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;todo_json/cmd&quot;</span> </span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	cmd.Execute()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在工作根目录下执行以下命令验证：</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ go run .                                 </span><br><span class="line">&gt; Hello ToDo! v1.<span class="number">0</span>.<span class="number">0</span></span><br><span class="line"></span><br><span class="line">$ go run . -h</span><br><span class="line">&gt; Todo App</span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">Usage:</span></span><br><span class="line"><span class="function">   [<span class="title">flags</span>]</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="title">Flags</span>:</span></span><br><span class="line"><span class="function">  -<span class="title">h</span>, --<span class="title">help</span>   <span class="title">help</span> <span class="title">for</span> <span class="title">this</span> <span class="title">command</span></span></span><br></pre></td></tr></table></figure>
+
+<p>当然也能先调用<code>go build</code>编译成可执行文件再进行命令行操作。</p>
+<h2 id="增加子命令"><a href="#增加子命令" class="headerlink" title="增加子命令"></a>增加子命令</h2><p>ToDo工具主要需要五个操作：<code>add</code>，<code>update</code>，<code>delete</code>，<code>list</code>，<code>mark</code>；可以将这些操作设计为五个子命令</p>
+<p>项目目录结构：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── cmd</span><br><span class="line">│   ├── add</span><br><span class="line">│   │   └── add.go</span><br><span class="line">│   ├── delete</span><br><span class="line">│   │   └── delete.go</span><br><span class="line">│   ├── list</span><br><span class="line">│   │   └── list.go</span><br><span class="line">│   ├── mark</span><br><span class="line">│   │   └── mark.go</span><br><span class="line">│   ├── root.go</span><br><span class="line">│   └── update</span><br><span class="line">│       └── update.go</span><br><span class="line">├── go.mod</span><br><span class="line">├── go.sum</span><br><span class="line">└── main.go</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>cobra官方推荐通过新建子目录管理子命令模块</p>
+</blockquote>
+<p>以<code>cmd/add/add.go</code>为例，创建新的子命令<code>addCmd</code>：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> add</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;github.com/spf13/cobra&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> AddCmd = &amp;cobra.Command&#123;</span><br><span class="line">	Use:   <span class="string">&quot;add &#123;task&#125;&quot;</span>, </span><br><span class="line">	Short: <span class="string">&quot;add a new task&quot;</span>,</span><br><span class="line">	Run:   addFunc,    <span class="comment">// 通过`go run . add`可以调用</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">addFunc</span><span class="params">(cmd *cobra.Command, args []<span class="type">string</span>)</span></span> &#123;</span><br><span class="line">	<span class="comment">// TO DO:</span></span><br><span class="line">	fmt.Println(<span class="string">&quot;using todo.add ...&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在<code>cmd/root.go</code>中加入：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">init</span><span class="params">()</span></span> &#123;</span><br><span class="line">	rootCmd.AddCommand(add.AddCmd)</span><br><span class="line">	rootCmd.AddCommand(<span class="built_in">delete</span>.DeleteCmd)</span><br><span class="line">	rootCmd.AddCommand(update.UpdateCmd)</span><br><span class="line">	rootCmd.AddCommand(list.ListCmd)</span><br><span class="line">	rootCmd.AddCommand(mark.MarkCmd)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>命令行验证一下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">go</span> run . add</span><br><span class="line">&gt; using todo.add ...</span><br></pre></td></tr></table></figure>
+<h2 id="位置参数-Positional-Args"><a href="#位置参数-Positional-Args" class="headerlink" title="位置参数 Positional Args"></a>位置参数 Positional Args</h2><p>在该部分，我们将实现各个命令的位置参数验证，以<code>list</code>子命令为例，我们规定：</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">todo_json list all 列出所有任务</span><br><span class="line">todo_json list todo 列出todo状态的任务</span><br><span class="line">todo_json list <span class="keyword">in</span>-progress 列出<span class="keyword">in</span>-progress状态的任务</span><br><span class="line">todo_json list done 列出done状态的任务</span><br></pre></td></tr></table></figure>
+
+<h3 id="Command中相关字段"><a href="#Command中相关字段" class="headerlink" title="Command中相关字段"></a>Command中相关字段</h3><p><code>cobra.Command</code>中关于位置参数有两个常用的字段：</p>
+<ul>
+<li><code>Args</code>：类型为<code>cobra.PositionalArgs</code>，位置参数的验证器，可以指定位置参数的数量，内容等</li>
+<li><code>ValidArgs</code>：类型为<code>[]string</code>，指定合法的位置参数，可用作命令补全中</li>
+</ul>
+<h3 id="参数数量验证器"><a href="#参数数量验证器" class="headerlink" title="参数数量验证器"></a>参数数量验证器</h3><p>cobra提供了一些内置的参数验证器，如：</p>
+<ul>
+<li><code>NoArgs</code>，表明当前命令不需要位置参数，命令后第一个参数会尝试解析成子命令<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> AddCmd = &amp;cobra.Command&#123;</span><br><span class="line">	Use:   <span class="string">&quot;add [task]&quot;</span>,</span><br><span class="line">	Short: <span class="string">&quot;add a new task&quot;</span>,</span><br><span class="line">	Args:  cobra.NoArgs,</span><br><span class="line">	Run:   addFunc,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+测试结果：<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ go run . add &quot;something&quot;</span><br><span class="line">&gt; Error: unknown command &quot;something&quot; <span class="keyword">for</span> &quot; add&quot; ...</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>其他参数<strong>数量</strong>验证器有：</p>
+<ul>
+<li><code>ArbitraryArgs</code>，表明可接受任意个参数，为<code>Args</code>的默认值(即<code>Args</code>为nil时仍使用<code>ArbitraryArgs</code>)</li>
+<li><code>MinimumNArgs(n)</code>，表示最少接受n个参数，少于n个参数会报错</li>
+<li><code>MaximumNArgs(n)</code>，表示最多接受n个参数，多于n个参数会报错</li>
+<li><code>ExactArgs(n)</code>，表示只接受n个参数，多或少于n个参数会报错</li>
+<li><code>RangeArgs(min, max)</code>，表示接受[min, max]个参数</li>
+</ul>
+<h3 id="参数内容验证器"><a href="#参数内容验证器" class="headerlink" title="参数内容验证器"></a>参数内容验证器</h3><p>还有参数<strong>内容</strong>验证其有：</p>
+<ul>
+<li><code>OnlyValidArgs</code>，会检测参数是否在<code>ValidArgs</code>中</li>
+</ul>
+<h3 id="组合参数验证器"><a href="#组合参数验证器" class="headerlink" title="组合参数验证器"></a>组合参数验证器</h3><p>想要使用多个验证器时，可以使用<code>MatchAll(pargs ...PositionalArgs)</code>。</p>
+<p>这里完成<code>ListCmd</code>的参数校验：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> (</span><br><span class="line">	TODO        = <span class="string">&quot;todo&quot;</span></span><br><span class="line">	IN_PROGRESS = <span class="string">&quot;in-progress&quot;</span></span><br><span class="line">	DONE        = <span class="string">&quot;done&quot;</span></span><br><span class="line">	ALL         = <span class="string">&quot;all&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> ListCmd = &amp;cobra.Command&#123;</span><br><span class="line">	Use:       <span class="string">&quot;list &#123;todo|in-progress|done&#125;&quot;</span>,</span><br><span class="line">	Short:     <span class="string">&quot;list the tasks of specified type&quot;</span>,</span><br><span class="line">	ValidArgs: []<span class="type">string</span>&#123;TODO, IN_PROGRESS, DONE, ALL&#125;,</span><br><span class="line">	Args:      cobra.MatchAll(cobra.ExactArgs(<span class="number">1</span>), cobra.OnlyValidArgs),</span><br><span class="line">	Run:       ListFunc,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">ListFunc</span><span class="params">(cmd *cobra.Command, args []<span class="type">string</span>)</span></span> &#123;</span><br><span class="line">	<span class="keyword">switch</span> args[<span class="number">0</span>] &#123;</span><br><span class="line">	<span class="keyword">case</span> TODO:</span><br><span class="line">		fmt.Println(<span class="string">&quot;List of todo:&quot;</span>)</span><br><span class="line">	<span class="keyword">case</span> IN_PROGRESS:</span><br><span class="line">		fmt.Println(<span class="string">&quot;List of in-progress:&quot;</span>)</span><br><span class="line">	<span class="keyword">case</span> DONE:</span><br><span class="line">		fmt.Println(<span class="string">&quot;List of done:&quot;</span>)</span><br><span class="line">	<span class="keyword">case</span> ALL:</span><br><span class="line">		fmt.Println(<span class="string">&quot;List of all:&quot;</span>)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>测试结果：</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ go run . list todo</span><br><span class="line">&gt; List of todo:</span><br><span class="line"></span><br><span class="line">$ go run . list undone </span><br><span class="line">&gt; Error: invalid argument &quot;undone&quot; <span class="keyword">for</span> &quot; list&quot;</span><br></pre></td></tr></table></figure>
+<h3 id="自定义参数验证器"><a href="#自定义参数验证器" class="headerlink" title="自定义参数验证器"></a>自定义参数验证器</h3><p> 也可以通过自定义函数<code>func(cmd *cobra.Command, args []string) error</code>来实现自定义验证器，以<code>update</code>为例：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// cmd/update/update.go</span></span><br><span class="line"><span class="keyword">var</span> UpdateCmd = &amp;cobra.Command&#123;</span><br><span class="line">	Use:   <span class="string">&quot;update &#123;id&#125; &#123;task&#125;&quot;</span>,</span><br><span class="line">	Short: <span class="string">&quot;update specified task content&quot;</span>,</span><br><span class="line">	Args:  cobra.MatchAll(cobra.ExactArgs(<span class="number">2</span>), utils.CheckNum(<span class="number">1</span>)),</span><br><span class="line">	Run:   UpdateFunc,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// utils/validation.go</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">CheckNum</span><span class="params">(n <span class="type">int</span>)</span></span> cobra.PositionalArgs &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="function"><span class="keyword">func</span><span class="params">(cmd *cobra.Command, args []<span class="type">string</span>)</span></span> <span class="type">error</span> &#123;</span><br><span class="line">		_, err := strconv.Atoi(args[n<span class="number">-1</span>])</span><br><span class="line">		<span class="keyword">return</span> err</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="选项-x2F-标志位-Flags"><a href="#选项-x2F-标志位-Flags" class="headerlink" title="选项&#x2F;标志位 Flags"></a>选项&#x2F;标志位 Flags</h2><p>在这一部分，我们将使用选项来实现<code>mark</code>子命令，我们规定：</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">todo_json mark &#123;id&#125; --inprogress 将任务标记为<span class="keyword">in</span>-progress </span><br><span class="line">todo_json mark &#123;id&#125; --done 将任务标记为done</span><br></pre></td></tr></table></figure>
+
+<h3 id="Command中不同的FlagSet"><a href="#Command中不同的FlagSet" class="headerlink" title="Command中不同的FlagSet"></a>Command中不同的FlagSet</h3><p>在cobra中，每个命令（Command）都拥有几个<code>Flags Set</code>：</p>
+<ul>
+<li><code>Persistent Flags Set</code>：在该标志集中定义的flag能够被子命令所继承</li>
+<li><code>Inherit Flags Set</code>：存放所有继承自<strong>父命令</strong><code>Persistent Flags Set</code>和<code>Inherit Flags Set</code>的标志</li>
+<li><code>Local Flags Set</code>：等同于<code>NonInherited Flags Set</code>，存放命令本身定义的标记（包括本身的<code>Persistent Flags Set</code>），不包括继承的标记。</li>
+<li><code>Flags Set</code>：上述所有标记的并集。</li>
+</ul>
+<p>获取对应标志集的方法：</p>
+<ul>
+<li><code>cmd.PersistentFlags()</code></li>
+<li><code>cmd.InheritedFlags()</code></li>
+<li><code>cmd.LocalFlags()</code>或<code>cmd.NonInheritedFlags()</code></li>
+<li><code>cmd.Flags()</code></li>
+</ul>
+<h3 id="定义标记"><a href="#定义标记" class="headerlink" title="定义标记"></a>定义标记</h3><p>向标志集定义标志&#x2F;选项的方法，以String类型标记为例：</p>
+<ul>
+<li><code>flagSet.String(tagName, defaultValue, usage)</code>，定义一个<code>--tagName</code>的String类型标签，并返回存放解析结果的变量指针<code>*String</code></li>
+<li><code>flagSet.StringP(tagName, shortHand, defaultValue, usage)</code>，与<code>flagSet.String</code>类似，但增加了短选项别名<code>-shortHand</code>，其中<code>shortHand</code>是一个字符</li>
+<li><code>flagSet.StringVar(p *String, tagName, defaultValue, usage)</code>，会将解析结果保存在存入的p指针指向的变量中。</li>
+<li><code>flagSet.StringVarP(p *String, tagName, shortHand, defaultValue, usage)</code>，与<code>flagSet.StringVar</code>类似，但增加了短选项别名<code>-shortHand</code>，其中<code>shortHand</code>是一个字符</li>
+</ul>
+<p>类似的定义其他基本类型标记的方法有：</p>
+<ul>
+<li>整型类型（Int, Uint, Uint16等）：如<code>flagSet.Int(...)</code>, <code>flagSet.Uint16VarP(...)</code></li>
+<li>浮点类型（Float32，Float64等）：如<code>flagSet.Float32(...)</code></li>
+<li>布尔类型：如：<code>flagSet.Bool(...)</code></li>
+</ul>
+<p>还有定义基本类型的切片类型标记的方法，如：<code>flagSet.IntSlice(...)</code>, <code>flagSet.IntSliceVar(...)</code>, <code>flagSet.IntSliceVarP(...)</code></p>
+<blockquote>
+<ol>
+<li>标志的定义必须在命令行<strong>解析前</strong>完成，一般在所在包的init函数中定义；在<code>Command.Run</code>或<code>Command.RunE</code>的函数体中定义会产生错误！</li>
+<li><code>flagSet.Flags()</code>能获取所有继承和本地的标记集，但通过<code>flag.Flags()</code>定义的标记只会是本地标记，不会传给子命令</li>
+</ol>
+</blockquote>
+<h3 id="获取标记值"><a href="#获取标记值" class="headerlink" title="获取标记值"></a>获取标记值</h3><p>在命令行解析后获取相应的标记&#x2F;选项的值，除了使用标记定义方法返回&#x2F;传入的指针变量外，还可以通过<code>flagSet.GetXXX(tagName)</code>获取，其中XXX位相应标记的类型，如</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> user, err := cmd.Flags().GetString(<span class="string">&quot;name&quot;</span>); err != <span class="literal">nil</span> &#123;</span><br><span class="line">	fmt.Println(err.Error())</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">	fmt.Println(user)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="标记分组"><a href="#标记分组" class="headerlink" title="标记分组"></a>标记分组</h3><p>cobra还允许开发者使用分组来实现不同标记之间的关系，如：</p>
+<ul>
+<li><code>cmd.MarkFlagsRequiredTogether(tagName...)</code>, 要求某些标记必须在命令行同时出现</li>
+<li><code>cmd.MarkFlagsMutuallyExclusive(tagName...)</code>，要求某些标记不能同时出现</li>
+<li><code>cmd.MarkFlagsOneRequired(tagName...)</code>，要求某些标记至少出现一个</li>
+</ul>
+<p>接下来，我们就可以利用上述的内容，完成<code>mark</code>命令的标记定义：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> (</span><br><span class="line">	IN_PROGRESS = <span class="string">&quot;inprogress&quot;</span></span><br><span class="line">	DONE        = <span class="string">&quot;done&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> (</span><br><span class="line">	in   <span class="type">bool</span></span><br><span class="line">	done <span class="type">bool</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> MarkCmd = &amp;cobra.Command&#123;</span><br><span class="line">	Use:   <span class="string">&quot;mark &#123;id&#125;&quot;</span>,</span><br><span class="line">	Short: <span class="string">&quot;mark the specified task in some state&quot;</span>,</span><br><span class="line">	Args:  cobra.MatchAll(cobra.ExactArgs(<span class="number">1</span>), utils.CheckNum(<span class="number">1</span>)),</span><br><span class="line">	Run:   MarkFunc,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">MarkFunc</span><span class="params">(cmd *cobra.Command, args []<span class="type">string</span>)</span></span> &#123;</span><br><span class="line">	<span class="keyword">if</span> in &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;in progress&quot;</span>)</span><br><span class="line">	&#125; <span class="keyword">else</span> <span class="keyword">if</span> done &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;done&quot;</span>)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">init</span><span class="params">()</span></span> &#123;</span><br><span class="line">	MarkCmd.Flags().BoolVar(&amp;in, IN_PROGRESS, <span class="literal">false</span>, <span class="string">&quot;mark task with in-progress status&quot;</span>)</span><br><span class="line">	MarkCmd.Flags().BoolVar(&amp;done, DONE, <span class="literal">false</span>, <span class="string">&quot;mark task with done status&quot;</span>)</span><br><span class="line">	MarkCmd.MarkFlagsMutuallyExclusive(IN_PROGRESS, DONE)</span><br><span class="line">	MarkCmd.MarkFlagsOneRequired(IN_PROGRESS, DONE)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>测试结果：</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ go run . mark <span class="number">1</span></span><br><span class="line"><span class="function">Error: <span class="title">at</span> <span class="title">least</span> <span class="title">one</span> <span class="title">of</span> <span class="title">the</span> <span class="title">flags</span> <span class="title">in</span> <span class="title">the</span> <span class="title">group</span> [<span class="title">inprogress</span> <span class="title">done</span>] <span class="title">is</span> <span class="title">required</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">$ <span class="title">go</span> <span class="title">run</span> . <span class="title">mark</span> 1 --<span class="title">inprogress</span> --<span class="title">done</span></span></span><br><span class="line"><span class="function"><span class="title">Error</span>: <span class="title">if</span> <span class="title">any</span> <span class="title">flags</span> <span class="title">in</span> <span class="title">the</span> <span class="title">group</span> [<span class="title">inprogress</span> <span class="title">done</span>] <span class="title">are</span> <span class="title">set</span> <span class="title">none</span> <span class="title">of</span> <span class="title">the</span> <span class="title">others</span> <span class="title">can</span> <span class="title">be</span>; [<span class="title">done</span> <span class="title">inprogress</span>] <span class="title">were</span> <span class="title">all</span> <span class="title">set</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">$ <span class="title">go</span> <span class="title">run</span> . <span class="title">mark</span> 1 --<span class="title">inprogress</span></span></span><br><span class="line"><span class="function"><span class="title">in</span> <span class="title">progress</span></span></span><br></pre></td></tr></table></figure>
+
+<p>以上就是Cobra的基础内容了，想利用Cobra的高级特性参考<a target="_blank" rel="noopener" href="https://github.com/spf13/cobra/blob/main/site/content/user_guide.md">文档</a>，todo_json的<a target="_blank" rel="noopener" href="https://github.com/DopamineNone/todo_json">开源仓库</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://dopaminenone.github.io">DopamineNone</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://dopaminenone.github.io/2025/01/10/Golang%E4%B9%8BCobra%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/">https://dopaminenone.github.io/2025/01/10/Golang%E4%B9%8BCobra%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://dopaminenone.github.io" target="_blank">多巴胺の小窝</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Golang/">Golang</a></div><div class="post_share"></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat.png" target="_blank"><img class="post-qr-code-img" src="/img/wechat.png" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/img/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="/img/alipay.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2025/01/14/%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0-%E5%9F%BA%E7%A1%80%E6%95%B0%E5%AD%A6%E5%BA%94%E7%94%A8/" title="算法笔记-基础数学应用"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">算法笔记-基础数学应用</div></div></a></div><div class="next-post pull-right"><a href="/2025/01/08/Git%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/" title="Git之基本工作目录|暂存区|版本库操作"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Git之基本工作目录|暂存区|版本库操作</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2025/01/15/Golang%20%E4%BE%9D%E8%B5%96%E7%AE%A1%E7%90%86/" title="Golang 依赖管理"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-15</div><div class="title">Golang 依赖管理</div></div></a></div><div><a href="/2024/01/20/Golang%20%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="Golang 基础语法学习笔记"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-20</div><div class="title">Golang 基础语法学习笔记</div></div></a></div><div><a href="/2024/07/29/Golang%20%E5%B9%B6%E5%8F%91/" title="Golang并发"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-29</div><div class="title">Golang并发</div></div></a></div><div><a href="/2024/01/20/%E4%B8%80%E4%BA%9BGolang%20%E7%9A%84%E5%86%85%E7%BD%AE%E5%8C%85/" title="一些 Golang 的内置包"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-20</div><div class="title">一些 Golang 的内置包</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">DopamineNone</div><div class="author-info__description">追求自发向上的成长</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">25</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">19</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/DopamineNone"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/DopamineNone" target="_blank" title="GitHub"><i class="fab fa-github" style="color: ;"></i></a><a class="social-icon" href="mailto:dopaminenone@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: ;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">本博客尚未加速，请耐心等待加载...</br>网址1：</br>https://dopamine-none.gitee.io/</br>网址2：</br>https://dopaminenone.github.io/</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96cobra"><span class="toc-number">1.</span> <span class="toc-text">获取cobra</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#cobra-Command"><span class="toc-number">2.</span> <span class="toc-text">cobra.Command</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A1%B9%E7%9B%AE"><span class="toc-number">3.</span> <span class="toc-text">初始化项目</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A2%9E%E5%8A%A0%E5%AD%90%E5%91%BD%E4%BB%A4"><span class="toc-number">4.</span> <span class="toc-text">增加子命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%8D%E7%BD%AE%E5%8F%82%E6%95%B0-Positional-Args"><span class="toc-number">5.</span> <span class="toc-text">位置参数 Positional Args</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Command%E4%B8%AD%E7%9B%B8%E5%85%B3%E5%AD%97%E6%AE%B5"><span class="toc-number">5.1.</span> <span class="toc-text">Command中相关字段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E6%95%B0%E6%95%B0%E9%87%8F%E9%AA%8C%E8%AF%81%E5%99%A8"><span class="toc-number">5.2.</span> <span class="toc-text">参数数量验证器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E6%95%B0%E5%86%85%E5%AE%B9%E9%AA%8C%E8%AF%81%E5%99%A8"><span class="toc-number">5.3.</span> <span class="toc-text">参数内容验证器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E5%90%88%E5%8F%82%E6%95%B0%E9%AA%8C%E8%AF%81%E5%99%A8"><span class="toc-number">5.4.</span> <span class="toc-text">组合参数验证器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8F%82%E6%95%B0%E9%AA%8C%E8%AF%81%E5%99%A8"><span class="toc-number">5.5.</span> <span class="toc-text">自定义参数验证器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%89%E9%A1%B9-x2F-%E6%A0%87%E5%BF%97%E4%BD%8D-Flags"><span class="toc-number">6.</span> <span class="toc-text">选项&#x2F;标志位 Flags</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Command%E4%B8%AD%E4%B8%8D%E5%90%8C%E7%9A%84FlagSet"><span class="toc-number">6.1.</span> <span class="toc-text">Command中不同的FlagSet</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89%E6%A0%87%E8%AE%B0"><span class="toc-number">6.2.</span> <span class="toc-text">定义标记</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E6%A0%87%E8%AE%B0%E5%80%BC"><span class="toc-number">6.3.</span> <span class="toc-text">获取标记值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%87%E8%AE%B0%E5%88%86%E7%BB%84"><span class="toc-number">6.4.</span> <span class="toc-text">标记分组</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/01/15/Golang%20%E4%BE%9D%E8%B5%96%E7%AE%A1%E7%90%86/" title="Golang 依赖管理">Golang 依赖管理</a><time datetime="2025-01-15T10:25:06.000Z" title="发表于 2025-01-15 18:25:06">2025-01-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/01/14/%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0-%E5%9F%BA%E7%A1%80%E6%95%B0%E5%AD%A6%E5%BA%94%E7%94%A8/" title="算法笔记-基础数学应用">算法笔记-基础数学应用</a><time datetime="2025-01-14T08:19:00.000Z" title="发表于 2025-01-14 16:19:00">2025-01-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/01/10/Golang%E4%B9%8BCobra%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/" title="Golang之Cobra基本使用">Golang之Cobra基本使用</a><time datetime="2025-01-10T08:28:09.000Z" title="发表于 2025-01-10 16:28:09">2025-01-10</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/01/08/Git%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/" title="Git之基本工作目录|暂存区|版本库操作">Git之基本工作目录|暂存区|版本库操作</a><time datetime="2025-01-08T04:00:00.000Z" title="发表于 2025-01-08 12:00:00">2025-01-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/12/31/%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0-%E5%9B%BE%E8%AE%BA%E5%9F%BA%E7%A1%80/" title="算法笔记-图论基础">算法笔记-图论基础</a><time datetime="2024-12-31T07:57:12.000Z" title="发表于 2024-12-31 15:57:12">2024-12-31</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/img/banner.png')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By DopamineNone</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Welcome to my blog!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '935a45e292e7aefc49f5',
+      clientSecret: '4f0120383b37695a558ebab1ed09ee8e3c89d0d4',
+      repo: 'dopaminenone.github.io',
+      owner: 'DopamineNone',
+      admin: ['DopamineNone'],
+      id: 'a5a1de4d9782f95fd9ebe45cf59b0828',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.textContent= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !false) {
+  if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
