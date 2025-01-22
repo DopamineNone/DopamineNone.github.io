@@ -1,0 +1,344 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Git之.git目录 | 多巴胺の小窝</title><meta name="author" content="DopamineNone"><meta name="copyright" content="DopamineNone"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content=".git目录是 Git 用来存储项目版本控制信息的核心目录，下面是.git目录中重要文件和文件夹的作用： HEADHEAD文件指向当前处于的分支。其内容通常为： 1ref: refs&#x2F;heads&#x2F;main 这表明当前分支为main。 如果内容为ref: refs&#x2F;heads&#x2F;feat，表明当前分支为feat  Git 的设计是基于引用（refs）体系的，所有引用都存储在 .git&#x2F;ref">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Git之.git目录">
+<meta property="og:url" content="https://dopaminenone.github.io/2025/01/22/Git%E4%B9%8B.git%E7%9B%AE%E5%BD%95/index.html">
+<meta property="og:site_name" content="多巴胺の小窝">
+<meta property="og:description" content=".git目录是 Git 用来存储项目版本控制信息的核心目录，下面是.git目录中重要文件和文件夹的作用： HEADHEAD文件指向当前处于的分支。其内容通常为： 1ref: refs&#x2F;heads&#x2F;main 这表明当前分支为main。 如果内容为ref: refs&#x2F;heads&#x2F;feat，表明当前分支为feat  Git 的设计是基于引用（refs）体系的，所有引用都存储在 .git&#x2F;ref">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://dopaminenone.github.io/img/avatar.png">
+<meta property="article:published_time" content="2025-01-22T13:00:43.000Z">
+<meta property="article:modified_time" content="2025-01-22T15:40:07.909Z">
+<meta property="article:author" content="DopamineNone">
+<meta property="article:tag" content="git">
+<meta property="article:tag" content="Tool">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://dopaminenone.github.io/img/avatar.png"><link rel="shortcut icon" href="/img/pad.png"><link rel="canonical" href="https://dopaminenone.github.io/2025/01/22/Git%E4%B9%8B.git%E7%9B%AE%E5%BD%95/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin=""/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?93140760943d4fd0d21f31347c4b5cfc";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-H8LXHWF190"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-H8LXHWF190');
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: DopamineNone","link":"链接: ","source":"来源: 多巴胺の小窝","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Git之.git目录',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-01-22 23:40:07'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (false) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">27</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">20</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-heartbeat"></i><span> 生活</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 影视</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 其他</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></li><li><a class="site-page child" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/banner.png')"><nav id="nav"><span id="blog-info"><a href="/" title="多巴胺の小窝"><span class="site-name">多巴胺の小窝</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-heartbeat"></i><span> 生活</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 影视</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 其他</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></li><li><a class="site-page child" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Git之.git目录</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon fas fa-history"></i><span class="post-meta-label">更新于</span><time datetime="2025-01-22T15:40:07.909Z" title="更新于 2025-01-22 23:40:07">2025-01-22</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Tool/">Tool</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Git之.git目录"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p><code>.git</code>目录是 Git 用来存储项目版本控制信息的核心目录，下面是<code>.git</code>目录中重要文件和文件夹的作用：</p>
+<h2 id="HEAD"><a href="#HEAD" class="headerlink" title="HEAD"></a>HEAD</h2><p><code>HEAD</code>文件指向当前处于的分支。其内容通常为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ref: refs/heads/main</span><br></pre></td></tr></table></figure>
+<p>这表明当前分支为<code>main</code>。</p>
+<p>如果内容为<code>ref: refs/heads/feat</code>，表明当前分支为<code>feat</code></p>
+<blockquote>
+<p>Git 的设计是基于引用（refs）体系的，所有引用都存储在 .git&#x2F;refs 目录下，其中refs&#x2F;heads&#x2F; 用于存储分支</p>
+</blockquote>
+<h2 id="config"><a href="#config" class="headerlink" title="config"></a>config</h2><p>存储对应项目的 Git 配置信息，例如远程仓库地址、体验化选项等。文件内容大致为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[core]</span><br><span class="line">        repositoryformatversion = 0</span><br><span class="line">        filemode = false</span><br><span class="line">        bare = false</span><br><span class="line">        logallrefupdates = true</span><br><span class="line">        symlinks = false</span><br><span class="line">        ignorecase = true</span><br><span class="line">[remote &quot;origin&quot;]</span><br><span class="line">        url = https://github.com/xxx/xxx.git</span><br><span class="line">        fetch = +refs/heads/*:refs/remotes/origin/*</span><br><span class="line">[branch &quot;main&quot;]</span><br><span class="line">        remote = origin</span><br><span class="line">        merge = refs/heads/main</span><br><span class="line">[branch &quot;feat1&quot;]</span><br><span class="line">        remote = origin</span><br><span class="line">        merge = refs/heads/feat1</span><br><span class="line">        vscode-merge-base = origin/main</span><br></pre></td></tr></table></figure>
+
+<h2 id="description"><a href="#description" class="headerlink" title="description"></a>description</h2><p>GitWeb 服务中用于显示项目描述，通常在本地使用时没有实际作用。</p>
+<h2 id="objects"><a href="#objects" class="headerlink" title="objects&#x2F;"></a>objects&#x2F;</h2><p>Git 中最重要的文件夹，存储所有对象（如 commit 、tree 、blob，以及annotated tag）。不同对象根据对象的标识码和数据内容保存。</p>
+<p>Git 中的所有对象（commit、tree、blob 和 annotated tag）在存储时都会经过以下两步处理：</p>
+<ul>
+<li>添加头部信息：包括对象类型和内容长度；</li>
+<li>使用 zlib 压缩：将对象压缩为二进制格式存储。</li>
+</ul>
+<p>想要查看对象存储的信息可以使用命令<code>git cat-file -p &lt;hash-id&gt;</code></p>
+<h3 id="Commit-对象"><a href="#Commit-对象" class="headerlink" title="Commit 对象"></a>Commit 对象</h3><p>记录一次提交操作，包含提交描述信息和对应根目录的 tree 对象。<strong>文件内容</strong>：</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">tree &lt;tree-hash&gt;</span><br><span class="line">parent &lt;parent-hash&gt; # 可能有多个</span><br><span class="line">author &lt;author-name&gt; &lt;email&gt; &lt;timestamp&gt;</span><br><span class="line">committer &lt;committer-name&gt; &lt;email&gt; &lt;timestamp&gt;</span><br><span class="line"></span><br><span class="line">&lt;commit-message&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>tree-hash</code>：指向根目录的 tree 对象。</li>
+<li><code>parent-hash</code>：指向上一个提交的哈希值（如果有多个父提交，则记录多个）。</li>
+<li><code>author</code>：提交作者的信息，包括名字、邮箱和时间戳。</li>
+<li><code>committer</code>：实际提交人信息（可能与作者不同）。</li>
+<li><code>&lt;commit-message&gt;</code>：提交的描述信息。</li>
+</ul>
+<h3 id="Tree-对象"><a href="#Tree-对象" class="headerlink" title="Tree 对象"></a>Tree 对象</h3><p>存储目录中文件和子目录的结构信息，相当于一个目录的实时展示。<strong>文件内容</strong>：<br>  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;file-mode&gt; &lt;type&gt; &lt;hash&gt; &lt;filename&gt;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li><code>file-mode</code>：文件的权限信息（如普通文件、可执行文件、子目录等）。</li>
+<li><code>type</code>：对象类型（blob 或 tree）。</li>
+<li><code>hash</code>：对应 blob 或子 tree 对象的标识码。</li>
+<li><code>filename</code>：文件或目录的名称。<br>示例：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">100644 blob 789abcd file.txt</span><br><span class="line">040000 tree 123efgh subdir</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="Blob-对象"><a href="#Blob-对象" class="headerlink" title="Blob 对象"></a>Blob 对象</h3><p>存储文件的内容，没有文件名称或目录结构信息，是 Git 存储原始文件数据的核心实体。</p>
+<p><strong>文件内容</strong>：直接存储文件内容（存储时经过<strong>添加头部</strong>和<strong>zlib压缩</strong>，故不是明文），不包含元数据。</p>
+<ul>
+<li>例如，一个文本文件 <code>hello.txt</code>，内容为 <code>Hello, world!</code>，其 blob 对象使用<code>git cat-file -p</code>查看后显示：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Hello, world!</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="Annotated-Tag-对象"><a href="#Annotated-Tag-对象" class="headerlink" title="Annotated Tag 对象"></a>Annotated Tag 对象</h3><p>标记一个实体对象，通常用于永久标记，包含创建者、时间和描述信息。<strong>文件内容</strong>：<br>  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">object &lt;object-hash&gt;</span><br><span class="line">type &lt;type&gt;</span><br><span class="line">tag &lt;tag-name&gt;</span><br><span class="line">tagger &lt;tagger-name&gt; &lt;email&gt; &lt;timestamp&gt;</span><br><span class="line"></span><br><span class="line">&lt;tag-message&gt;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li><code>object-hash</code>：指向被标记对象（如 commit）的哈希值。</li>
+<li><code>type</code>：对象的类型（如 commit、tree、blob）。</li>
+<li><code>tag-name</code>：标签的名称。</li>
+<li><code>tagger</code>：标签创建者的信息。</li>
+<li><code>&lt;tag-message&gt;</code>：标签的描述信息。</li>
+</ul>
+<p>示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">object f3a23bc4f1e8e5a1d07e8f5f0f7c12ef8f7d1234</span><br><span class="line">type commit</span><br><span class="line">tag v1.0</span><br><span class="line">tagger John Doe &lt;johndoe@example.com&gt; 1672531200 +0000</span><br><span class="line"></span><br><span class="line">Initial release</span><br></pre></td></tr></table></figure>
+
+<p>这些对象是 Git 存储和追踪文件历史的核心，采用哈希值（<strong>SHA-1</strong> 或其他算法）唯一标识，确保了数据完整性和高效性。</p>
+<h2 id="refs"><a href="#refs" class="headerlink" title="refs&#x2F;"></a>refs&#x2F;</h2><p>存放分支和标签信息，这些参照指向对应的 commit。包括三个个重要存储目录：</p>
+<ul>
+<li><code>refs/heads/</code>：存放分支信息；<ul>
+<li><code>refs/heads/xxx</code>：<code>xxx</code>为本地分支名，其文件中存储该分支最新提交的hash id</li>
+</ul>
+</li>
+<li><code>refs/remote/origin/</code>：存放远程分支信息<ul>
+<li><code>refs/heads/xxx</code>：<code>xxx</code>为远程分支名，其文件中存储该分支最新提交的hash id</li>
+</ul>
+</li>
+<li><code>refs/tags/</code>：存放标签信息。<ul>
+<li><code>refs/tags/xxx</code>：<code>xxx</code>为附注标签名，其文件中存储该Annotated Tag的hash id</li>
+</ul>
+</li>
+</ul>
+<h2 id="hooks"><a href="#hooks" class="headerlink" title="hooks&#x2F;"></a>hooks&#x2F;</h2><p>存放各种钩子脚本，用于在 Git 操作时执行自定义操作。其中.sample后缀的文件只是样例，需要将后缀去除并<strong>赋予执行权限</strong>后才能作为真正的脚本。脚本编写可以使用任何支持的脚本语言，如 Bash、Python 等</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ls hooks</span><br><span class="line">applypatch-msg.sample      pre-applypatch.sample    pre-rebase.sample          sendemail-validate.sample</span><br><span class="line">commit-msg.sample          pre-commit.sample        pre-receive.sample         update.sample</span><br><span class="line">fsmonitor-watchman.sample  pre-merge-commit.sample  prepare-commit-msg.sample</span><br><span class="line">post-update.sample         pre-push.sample          push-to-checkout.sample</span><br></pre></td></tr></table></figure>
+
+<p>例子：检查提交信息格式（commit-msg），确保提交信息以特定前缀开头</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Validating commit message...&quot;</span></span><br><span class="line"></span><br><span class="line">COMMIT_MSG=$(<span class="built_in">cat</span> <span class="string">&quot;<span class="variable">$1</span>&quot;</span>)</span><br><span class="line"><span class="keyword">if</span> [[ ! <span class="variable">$COMMIT_MSG</span> =~ ^(feat|fix|docs|style|refactor|<span class="built_in">test</span>|chore): ]]; <span class="keyword">then</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;Invalid commit message. Must start with one of: feat|fix|docs|style|refactor|test|chore.&quot;</span></span><br><span class="line">  <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Commit message is valid.&quot;</span></span><br><span class="line"><span class="built_in">exit</span> 0</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Hooks 不会随仓库一起推送到远程服务器。推荐将 Hooks 脚本存储在项目目录（如 .githooks&#x2F;）中，并通过文档指导团队成员启用。</p>
+</blockquote>
+<h3 id="info"><a href="#info" class="headerlink" title="info&#x2F;"></a>info&#x2F;</h3><p>包含额外的配置信息，例如<code>exclude</code>文件，设置本地排除要求。</p>
+<h3 id="logs"><a href="#logs" class="headerlink" title="logs&#x2F;"></a>logs&#x2F;</h3><p>记录分支和<code>HEAD</code>的历史变化记录，便于优化和借助调试。</p>
+<h3 id="index"><a href="#index" class="headerlink" title="index"></a>index</h3><p> Git 的 <strong>暂存区</strong>（staging area）的核心数据结构，用于管理文件的快照。它记录了工作区中文件的状态信息，是 Git 的暂存操作、差异计算以及提交生成的关键组件，是一个二进制文件。</p>
+<h3 id="packed-refs"><a href="#packed-refs" class="headerlink" title="packed-refs"></a>packed-refs</h3><p><strong>作用</strong>：</p>
+<ul>
+<li>将亚气式存储的参照（如分支）压缩为单个文件，减少文件总数，提高性能。</li>
+</ul>
+<h3 id="COMMIT-EDITMSG"><a href="#COMMIT-EDITMSG" class="headerlink" title="COMMIT_EDITMSG"></a>COMMIT_EDITMSG</h3><p><strong>作用</strong>：</p>
+<ul>
+<li>存储最近一次 commit 的消息，便于检查和修改。</li>
+</ul>
+<h3 id="ORIG-HEAD"><a href="#ORIG-HEAD" class="headerlink" title="ORIG_HEAD"></a>ORIG_HEAD</h3><p><strong>作用</strong>：</p>
+<ul>
+<li>记录最近一次重覆或结合之前的 HEAD 位置，通常用于撤销操作。</li>
+</ul>
+<p>理解<code>.git</code>目录中各文件和文件夹的作用，能让我们更深入了解 Git 运作机制，并能在工作中更好地排查问题和优化流程。对于初学者，探索<code>.git</code>目录中的内容是学习 Git 的重要一步；对于高级用户，理解该目录能让你更好地自定义 Git 操作和优化项目管理。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://dopaminenone.github.io">DopamineNone</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://dopaminenone.github.io/2025/01/22/Git%E4%B9%8B.git%E7%9B%AE%E5%BD%95/">https://dopaminenone.github.io/2025/01/22/Git%E4%B9%8B.git%E7%9B%AE%E5%BD%95/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://dopaminenone.github.io" target="_blank">多巴胺の小窝</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/git/">git</a><a class="post-meta__tags" href="/tags/Tool/">Tool</a></div><div class="post_share"></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat.png" target="_blank"><img class="post-qr-code-img" src="/img/wechat.png" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/img/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="/img/alipay.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2025/01/20/Git%E4%B9%8B%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95(2)/" title="Git之基本用法(2)"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Git之基本用法(2)</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2025/01/20/Git%E4%B9%8B%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95(2)/" title="Git之基本用法(2)"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-20</div><div class="title">Git之基本用法(2)</div></div></a></div><div><a href="/2025/01/08/Git%E4%B9%8B%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/" title="Git之基本用法"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-08</div><div class="title">Git之基本用法</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">DopamineNone</div><div class="author-info__description">追求自发向上的成长</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">27</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">20</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/DopamineNone"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/DopamineNone" target="_blank" title="GitHub"><i class="fab fa-github" style="color: ;"></i></a><a class="social-icon" href="mailto:dopaminenone@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: ;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">本博客尚未加速，请耐心等待加载...</br>网址1：</br>https://dopamine-none.gitee.io/</br>网址2：</br>https://dopaminenone.github.io/</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#HEAD"><span class="toc-number">1.</span> <span class="toc-text">HEAD</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#config"><span class="toc-number">2.</span> <span class="toc-text">config</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#description"><span class="toc-number">3.</span> <span class="toc-text">description</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#objects"><span class="toc-number">4.</span> <span class="toc-text">objects&#x2F;</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Commit-%E5%AF%B9%E8%B1%A1"><span class="toc-number">4.1.</span> <span class="toc-text">Commit 对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Tree-%E5%AF%B9%E8%B1%A1"><span class="toc-number">4.2.</span> <span class="toc-text">Tree 对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Blob-%E5%AF%B9%E8%B1%A1"><span class="toc-number">4.3.</span> <span class="toc-text">Blob 对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Annotated-Tag-%E5%AF%B9%E8%B1%A1"><span class="toc-number">4.4.</span> <span class="toc-text">Annotated Tag 对象</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#refs"><span class="toc-number">5.</span> <span class="toc-text">refs&#x2F;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#hooks"><span class="toc-number">6.</span> <span class="toc-text">hooks&#x2F;</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#info"><span class="toc-number">6.1.</span> <span class="toc-text">info&#x2F;</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#logs"><span class="toc-number">6.2.</span> <span class="toc-text">logs&#x2F;</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#index"><span class="toc-number">6.3.</span> <span class="toc-text">index</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#packed-refs"><span class="toc-number">6.4.</span> <span class="toc-text">packed-refs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#COMMIT-EDITMSG"><span class="toc-number">6.5.</span> <span class="toc-text">COMMIT_EDITMSG</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ORIG-HEAD"><span class="toc-number">6.6.</span> <span class="toc-text">ORIG_HEAD</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/01/22/Git%E4%B9%8B.git%E7%9B%AE%E5%BD%95/" title="Git之.git目录">Git之.git目录</a><time datetime="2025-01-22T13:00:43.000Z" title="发表于 2025-01-22 21:00:43">2025-01-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/01/20/Git%E4%B9%8B%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95(2)/" title="Git之基本用法(2)">Git之基本用法(2)</a><time datetime="2025-01-20T10:48:06.000Z" title="发表于 2025-01-20 18:48:06">2025-01-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/01/19/Golang%E4%B9%8BCobra%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/" title="Golang之Cobra基本使用">Golang之Cobra基本使用</a><time datetime="2025-01-19T08:28:09.000Z" title="发表于 2025-01-19 16:28:09">2025-01-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/01/15/Golang%20%E4%BE%9D%E8%B5%96%E7%AE%A1%E7%90%86/" title="Golang 依赖管理">Golang 依赖管理</a><time datetime="2025-01-15T10:25:06.000Z" title="发表于 2025-01-15 18:25:06">2025-01-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/01/14/%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0-%E5%9F%BA%E7%A1%80%E6%95%B0%E5%AD%A6%E5%BA%94%E7%94%A8/" title="算法笔记-基础数学应用">算法笔记-基础数学应用</a><time datetime="2025-01-14T08:19:00.000Z" title="发表于 2025-01-14 16:19:00">2025-01-14</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/img/banner.png')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By DopamineNone</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Welcome to my blog!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '935a45e292e7aefc49f5',
+      clientSecret: '4f0120383b37695a558ebab1ed09ee8e3c89d0d4',
+      repo: 'dopaminenone.github.io',
+      owner: 'DopamineNone',
+      admin: ['DopamineNone'],
+      id: '603ae09fd32aaf7018a2c77ac41a8542',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.textContent= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !false) {
+  if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
