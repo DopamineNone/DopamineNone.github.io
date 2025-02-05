@@ -1,0 +1,478 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Restful API初学习 | 多巴胺の小窝</title><meta name="author" content="DopamineNone"><meta name="copyright" content="DopamineNone"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="什么是RESTful APIRESTful API 是一种基于 REST（Representational State Transfer）架构风格设计的应用程序接口。它的概念包括：  资源： RESTful API 将一切事物都抽象为资源，比如一篇文章、一个用户、一个订单等。每个资源都有一个唯一的标识符（URI）来进行定位和访问，客户端通过操作这些 URI 来与资源进行交互。 HTTP： 对资源的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Restful API初学习">
+<meta property="og:url" content="https://dopaminenone.github.io/2025/02/05/RESTful%20API%E5%88%9D%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:site_name" content="多巴胺の小窝">
+<meta property="og:description" content="什么是RESTful APIRESTful API 是一种基于 REST（Representational State Transfer）架构风格设计的应用程序接口。它的概念包括：  资源： RESTful API 将一切事物都抽象为资源，比如一篇文章、一个用户、一个订单等。每个资源都有一个唯一的标识符（URI）来进行定位和访问，客户端通过操作这些 URI 来与资源进行交互。 HTTP： 对资源的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://dopaminenone.github.io/img/avatar.png">
+<meta property="article:published_time" content="2025-02-05T08:21:34.000Z">
+<meta property="article:modified_time" content="2025-02-05T10:41:08.386Z">
+<meta property="article:author" content="DopamineNone">
+<meta property="article:tag" content="后端">
+<meta property="article:tag" content="计算机网络">
+<meta property="article:tag" content="Web">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://dopaminenone.github.io/img/avatar.png"><link rel="shortcut icon" href="/img/pad.png"><link rel="canonical" href="https://dopaminenone.github.io/2025/02/05/RESTful%20API%E5%88%9D%E5%AD%A6%E4%B9%A0/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin=""/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?93140760943d4fd0d21f31347c4b5cfc";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-H8LXHWF190"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-H8LXHWF190');
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: DopamineNone","link":"链接: ","source":"来源: 多巴胺の小窝","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Restful API初学习',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-02-05 18:41:08'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (false) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">30</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">21</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-heartbeat"></i><span> 生活</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 影视</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 其他</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></li><li><a class="site-page child" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/banner.png')"><nav id="nav"><span id="blog-info"><a href="/" title="多巴胺の小窝"><span class="site-name">多巴胺の小窝</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-heartbeat"></i><span> 生活</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 影视</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 其他</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></li><li><a class="site-page child" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Restful API初学习</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon fas fa-history"></i><span class="post-meta-label">更新于</span><time datetime="2025-02-05T10:41:08.386Z" title="更新于 2025-02-05 18:41:08">2025-02-05</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Web-%E5%BC%80%E5%8F%91/">Web 开发</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Restful API初学习"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="什么是RESTful-API"><a href="#什么是RESTful-API" class="headerlink" title="什么是RESTful API"></a>什么是RESTful API</h2><p>RESTful API 是一种基于 REST（Representational State Transfer）架构风格设计的应用程序接口。它的概念包括：</p>
+<ul>
+<li><strong>资源：</strong> RESTful API <strong>将一切事物都抽象为资源</strong>，比如一篇文章、一个用户、一个订单等。<strong>每个资源都有一个唯一的标识符</strong>（URI）来进行<strong>定位和访问</strong>，客户端通过操作这些 URI 来与资源进行交互。</li>
+<li><strong>HTTP：</strong> 对资源的增删改查是通过HTTP 协议定义的 GET、POST、PUT、DELETE 等方法来对资源进行操作实现的，并使用HTTP状态码来表示操作结果。<strong>GET 用于获取资源信息，POST 用于创建新资源，PUT 用于更新资源，DELETE 用于删除资源。</strong> 这种基于 HTTP 方法的操作方式使得接口的语义清晰，易于理解和使用。</li>
+<li><strong>无状态：</strong> RESTful API 是无状态的，即<strong>服务器不会在不同请求之间记住客户端的状态信息</strong>。每个请求都是独立的，客户端需要在请求中包含所有必要的信息，服务器根据接收到的请求进行相应处理并返回结果。</li>
+<li><strong>数据表示：</strong> 资源可以以多种格式进行表示，如 JSON、XML 等。客户端和服务器可以协商使用哪种格式来进行数据的传输和交互，其中 JSON 由于其轻量级和易于解析的特点，在现代 RESTful API 中被广泛使用。</li>
+</ul>
+<blockquote>
+<p>RESTful API 与传统 API 的区别：</p>
+<ol>
+<li>传统 API没有统一固定的架构风格，可能基于不同的设计理念和技术实现</li>
+<li>传统 API接口设计可能更多地基于具体的业务功能和操作，方法名和参数可能更加多样化和自定义，不一定严格遵循 HTTP 协议的语义，可能需要更多的文档和约定来解释接口的使用方式</li>
+<li>传统 API接口数据传输格式可能更加多样化，除了 JSON 和 XML 外，还可能使用自定义的二进制格式或其他特定格式，在不同平台和语言之间的兼容性可能需要更多的处理和适配。</li>
+<li>传统 API可能是有状态的，服务器需要在不同请求之间维护客户端的状态信息，这在某些情况下可能会增加系统的复杂性</li>
+</ol>
+</blockquote>
+<hr>
+<h2 id="RESTful-API核心原则"><a href="#RESTful-API核心原则" class="headerlink" title="RESTful API核心原则"></a>RESTful API核心原则</h2><p>REST 架构风格的六个核心原则：</p>
+<ol>
+<li><p><strong>客户端 - 服务器架构</strong>：将系统的功能划分为<strong>客户端和服务器</strong>两部分。客户端主要负责与用户进行交互，收集用户输入，展示数据等；服务器则负责存储和管理数据，处理客户端发送的请求，并将处理结果返回给客户端。这种架构使得<strong>客户端和服务器可以独立地进行开发、维护和升级</strong>，提高了系统的<strong>可扩展性和可维护性</strong>。同时，也便于根据不同的需求和场景，对客户端和服务器进行优化和部署。</p>
+</li>
+<li><p><strong>无状态</strong>：服务器在处理每个请求时，不会依赖于之前请求的状态信息，即服务器不会在不同请求之间记住客户端的状态。无状态特性使得服务器<strong>更容易实现扩展</strong>，可以轻松<strong>应对大量的并发请求</strong>，也提高了系统的<strong>可靠性和故障恢复能力</strong>，当服务器出现故障时，更容易进行重启和恢复操作，而不会因为丢失状态信息而导致问题。</p>
+</li>
+<li><p><strong>缓存</strong>：在客户端或服务器端对响应数据进行缓存。客户端可以缓存服务器返回的数据，当再次需要相同数据时，直接从缓存中获取，而不需要再次向服务器发送请求。服务器也可以设置缓存策略，告知客户端哪些数据可以缓存以及缓存的有效时间等信息。缓存能够显著<strong>提高系统的性能和响应速度，减少网络带宽的占用，降低服务器的负载</strong>。</p>
+</li>
+<li><p><strong>分层系统</strong>：将系统划分为多个层次，每个层次都有特定的功能和职责，并且只能与相邻的层次进行交互。分层系统使得系统结构更加清晰，<strong>易于管理和维护</strong>。</p>
+</li>
+<li><p><strong>统一接口</strong>：所有的资源都通过统一的接口进行访问和操作</p>
+<ul>
+<li>每个资源都有一个唯一的标识符（URI），通过 URI 可以准确地定位和访问特定的资源</li>
+<li>利用 HTTP 协议定义的 GET、POST、PUT、DELETE 等方法来对资源进行操作，使用HTTP状态码来表示操作结果。</li>
+<li>请求和响应消息应该包含足够的信息，以便客户端和服务器能够理解消息的内容和含义</li>
+<li>响应消息中可以包含指向其他资源的链接，客户端可以根据这些链接进行进一步的操作和导航，使得系统具有更好的灵活性和可发现性，用户可以通过链接方便地访问相关资源<br> 统一接口使得 RESTful 系统具有更好的<strong>通用性和易用性</strong></li>
+</ul>
+</li>
+<li><p><strong>按需代码</strong>：服务器可以向客户端发送可执行代码，让客户端在本地执行这些代码，以扩展客户端的功能或实现特定的业务逻辑。按需代码可以在一定程度上增强客户端的功能，使得客户端能够根据服务器的要求动态地扩展或修改自身的行为，而不需要事先在客户端安装所有可能需要的功能模块。</p>
+</li>
+</ol>
+<hr>
+<h2 id="GET-POST-PUT-DELETE"><a href="#GET-POST-PUT-DELETE" class="headerlink" title="GET&#x2F;POST&#x2F;PUT&#x2F;DELETE"></a>GET&#x2F;POST&#x2F;PUT&#x2F;DELETE</h2><p>HTTP 方法是 RESTful API 的重要组成部分，是实现 RESTful 架构风格中统一接口的关键要素。</p>
+<ul>
+<li><strong>GET</strong>：主要用于从服务器<strong>获取资源</strong>的信息，是一种<strong>安全且幂等</strong>的操作。安全意味着它只用于获取数据，不会对服务器上的资源产生修改、删除等副作用；幂等表示多次执行相同的 GET 请求，得到的结果应该是一致的，不会改变服务器资源的状态。</li>
+</ul>
+<blockquote>
+<p>可以通过在 URL 中添加查询参数来实现更复杂的数据查询功能。比如，在一个商品管理系统中，客户端可以发送 GET 请求到&#x2F;products?category&#x3D;electronics&amp;priceRange&#x3D;100-500，获取价格在 100 到 500 之间的电子产品列表。</p>
+</blockquote>
+<hr>
+<ul>
+<li><strong>POST</strong>：用于在服务器上<strong>创建新的资源</strong>，是<strong>非幂等</strong>的操作。客户端将包含新资源数据的请求发送给服务器，服务器根据请求中的数据在相应的资源集合中创建一个新的资源，并返回新创建资源的信息或状态。</li>
+</ul>
+<blockquote>
+<p>除了创建资源，POST 还可以用于执行一些特定的操作，特别是那些不适合用 GET 来表示的操作，如提交表单、发起支付等。</p>
+</blockquote>
+<hr>
+<ul>
+<li><strong>PUT</strong>：用于<strong>更新</strong>服务器上已存在的资源，要求客户端发送完整的资源数据。服务器会根据请求中的数据对指定 URI 的资源进行完全替换更新，是幂等的操作。</li>
+</ul>
+<hr>
+<ul>
+<li>DELETE：用于<strong>删除</strong>服务器上的资源，是<strong>幂等</strong>的操作。客户端向服务器发送 DELETE 请求，指定要删除的资源的 URI，服务器根据该 URI 删除相应的资源。</li>
+</ul>
+<blockquote>
+<p>在删除主资源时，通常还会涉及到清理与该资源相关联的其他资源。比如在一个订单管理系统中，删除一个订单时，可能还需要删除与该订单相关的订单明细、库存占用记录等关联资源，这可以通过在服务器端的 DELETE 操作逻辑中进行处理。</p>
+</blockquote>
+<hr>
+<ul>
+<li><strong>PATCH</strong>：用于对服务器上的资源进行<strong>部分更新</strong>，客户端只需在请求体中包含要更新的部分字段和数据。服务器会根据这些数据对指定资源进行部分修改，而不是完全替换，是<strong>非幂等</strong>的操作。</li>
+</ul>
+<hr>
+<h2 id="常见-HTTP-状态码在API中的应用"><a href="#常见-HTTP-状态码在API中的应用" class="headerlink" title="常见 HTTP 状态码在API中的应用"></a>常见 HTTP 状态码在API中的应用</h2><p>RESTful API中的HTTP状态码用于表示服务器对客户端请求的处理结果和状态，常见的状态码按类别可分为信息性状态码（1xx）、成功状态码（2xx）、重定向状态码（3xx）、客户端错误状态码（4xx）和服务器错误状态码（5xx），以下是一些常见HTTP状态码及其在API中的使用场景：</p>
+<h3 id="成功状态码（2xx）"><a href="#成功状态码（2xx）" class="headerlink" title="成功状态码（2xx）"></a>成功状态码（2xx）</h3><ul>
+<li><strong>200 OK</strong><ul>
+<li><strong>含义</strong>：表示请求已成功，服务器已成功处理了客户端的请求，并将请求的资源返回给客户端。</li>
+<li><strong>使用场景</strong>：在GET请求成功获取资源时，如客户端发送GET请求获取用户列表，服务器正常响应并返回用户列表数据，就会返回200状态码。</li>
+</ul>
+</li>
+<li><strong>201 Created</strong><ul>
+<li><strong>含义</strong>：表示请求已成功，并且服务器创建了一个新的资源。</li>
+<li><strong>使用场景</strong>：通常在使用POST请求创建新资源时出现，比如客户端向服务器发送POST请求创建一个新的订单，服务器成功创建订单后，会返回201状态码，并在响应中包含新创建订单的相关信息。</li>
+</ul>
+</li>
+<li><strong>204 No Content</strong><ul>
+<li><strong>含义</strong>：表示请求已成功，但服务器没有返回任何内容，通常用于只需要客户端执行某个操作，而不需要返回数据的情况。</li>
+<li><strong>使用场景</strong>：当客户端发送DELETE请求删除一个资源，服务器成功删除后，可能会返回204状态码，表示资源已成功删除，无需返回额外内容。</li>
+</ul>
+</li>
+</ul>
+<h3 id="客户端错误状态码（4xx）"><a href="#客户端错误状态码（4xx）" class="headerlink" title="客户端错误状态码（4xx）"></a>客户端错误状态码（4xx）</h3><ul>
+<li><strong>400 Bad Request</strong><ul>
+<li><strong>含义</strong>：表示客户端发送的请求有错误，服务器无法理解或处理该请求。</li>
+<li><strong>使用场景</strong>：当客户端发送的请求参数缺失、格式错误或不符合业务规则时，服务器会返回400状态码，比如客户端在创建用户时，没有提供必要的用户名参数，服务器就会返回400状态码，并在响应中说明错误原因。</li>
+</ul>
+</li>
+<li><strong>401 Unauthorized</strong><ul>
+<li><strong>含义</strong>：表示客户端没有提供有效的身份验证信息，或者提供的身份验证信息无效，无法访问受保护的资源。</li>
+<li><strong>使用场景</strong>：当客户端尝试访问需要登录才能访问的资源，如获取用户个人信息，但没有提供有效的令牌或令牌已过期时，服务器会返回401状态码，提示客户端需要进行身份验证。</li>
+</ul>
+</li>
+<li><strong>403 Forbidden</strong><ul>
+<li><strong>含义</strong>：表示客户端有身份验证信息，但没有足够的权限访问请求的资源。</li>
+<li><strong>使用场景</strong>：例如普通用户尝试访问管理员才能访问的系统设置页面，服务器会返回403状态码，告知客户端没有权限访问该资源。</li>
+</ul>
+</li>
+<li><strong>404 Not Found</strong><ul>
+<li><strong>含义</strong>：表示客户端请求的资源在服务器上不存在。</li>
+<li><strong>使用场景</strong>：当客户端发送GET请求获取一个不存在的资源，如访问一个不存在的商品ID时，服务器会返回404状态码，表明找不到该资源。</li>
+</ul>
+</li>
+</ul>
+<h3 id="服务器错误状态码（5xx）"><a href="#服务器错误状态码（5xx）" class="headerlink" title="服务器错误状态码（5xx）"></a>服务器错误状态码（5xx）</h3><ul>
+<li><strong>500 Internal Server Error</strong><ul>
+<li><strong>含义</strong>：表示服务器在处理请求时发生了内部错误，通常是服务器端的程序出现了问题，如代码错误、数据库连接问题等。</li>
+<li><strong>使用场景</strong>：当服务器在执行某个操作时出现了未预料到的错误，无法完成客户端的请求，就会返回500状态码，例如服务器在处理订单时，由于数据库突然故障导致无法完成订单创建操作，服务器会返回500状态码。</li>
+</ul>
+</li>
+<li><strong>503 Service Unavailable</strong><ul>
+<li><strong>含义</strong>：表示服务器暂时无法处理请求，通常是由于服务器过载、正在维护或其他原因导致服务不可用。</li>
+<li><strong>使用场景</strong>：当服务器由于进行系统升级、维护，或者由于流量过大导致无法正常处理请求时，会返回503状态码，告知客户端服务暂时不可用，请稍后再试。</li>
+</ul>
+</li>
+</ul>
+<h2 id="RESTful-API的URL设计最佳实践"><a href="#RESTful-API的URL设计最佳实践" class="headerlink" title="RESTful API的URL设计最佳实践"></a>RESTful API的URL设计最佳实践</h2><ol>
+<li>基于资源设计：如<code>/users</code> 表示用户资源集合；<code>/users/&#123;userId&#125;</code> 表示特定用户的资源，<code>&#123;userId&#125;</code> 是用户的唯一标识符</li>
+<li>使用复数名词：有助于明确 URL 代表的是一个资源集合。</li>
+<li>避免使用动词：URL 应该主要用于标识资源，而不是描述操作。</li>
+<li>使用嵌套 URL 表示资源关系：如<code>/users/&#123;userId&#125;/orders</code> 表示特定用户的订单资源集合</li>
+<li>使用查询参数进行过滤和排序：&#x2F;users?page&#x3D;2&amp;limit&#x3D;10 表示获取第二页的用户信息，每页显示 10 条记录。</li>
+<li>保持 URL 简洁和可读性，避免在 URL 中使用过长或复杂的路径和参数</li>
+<li>版本控制：为了保证 API 的兼容性和可维护性，建议在 URL 或 HTTP请求中包含版本号</li>
+</ol>
+<hr>
+<h2 id="HATEOAS"><a href="#HATEOAS" class="headerlink" title="HATEOAS"></a>HATEOAS</h2><p>HATEOAS 即 “Hypermedia as the Engine of Application State”，翻译为 “超媒体即应用状态引擎”，它是 REST（Representational State Transfer）架构风格的一个重要原则。简单来说，HATEOAS 允许服务器通过响应中的超媒体链接告知客户端当前可以执行的操作以及如何访问相关的资源，就像给客户端提供了一张 “地图”，让客户端能够根据当前的应用状态自主地决定下一步的行动。</p>
+<p>传统的 API 通常需要客户端事先了解所有可能的操作和资源的 URL，这就要求客户端和服务器之间有紧密的耦合，并且需要详细的文档来描述 API 的使用方式。而 HATEOAS 使得 API 具有更强的<strong>自描述性</strong>，客户端可以通过服务器返回的超媒体链接了解当前资源支持的操作和可以访问的其他资源</p>
+<p>示例：当客户端请求获取一个用户资源时，服务器的响应可能如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;John Doe&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;email&quot;</span><span class="punctuation">:</span> <span class="string">&quot;johndoe@example.com&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;links&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;self&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;href&quot;</span><span class="punctuation">:</span> <span class="string">&quot;https://api.example.com/users/1&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;update&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;href&quot;</span><span class="punctuation">:</span> <span class="string">&quot;https://api.example.com/users/1&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span> <span class="string">&quot;PUT&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;delete&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;href&quot;</span><span class="punctuation">:</span> <span class="string">&quot;https://api.example.com/users/1&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span> <span class="string">&quot;DELETE&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;orders&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;href&quot;</span><span class="punctuation">:</span> <span class="string">&quot;https://api.example.com/users/1/orders&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>links 字段包含了与该用户资源相关的超媒体链接，客户端可以根据这些链接知道如何更新、删除该用户，以及如何访问该用户的订单资源，而不需要事先知道这些 URL。由于客户端是根据服务器返回的超媒体链接来进行操作的，当服务器端的资源结构或操作方式发生变化时，只要超媒体链接能够正确地反映这些变化，客户端就可以继续正常工作，不需要进行大规模的修改。这使得 API 的<strong>维护和扩展</strong>更加容易，降低了客户端和服务器之间的耦合度。</p>
+<hr>
+<h2 id="RESTful-API的版本控制"><a href="#RESTful-API的版本控制" class="headerlink" title="RESTful API的版本控制"></a>RESTful API的版本控制</h2><p>API版本控制是RESTful API设计中的重要部分，它允许开发者在更新API时保持向后兼容性，同时不影响现有客户端的使用。以下是几种常见的API版本控制方法及其优缺点：</p>
+<hr>
+<h3 id="URL版本控制（URI-Versioning）"><a href="#URL版本控制（URI-Versioning）" class="headerlink" title="URL版本控制（URI Versioning）"></a>URL版本控制（URI Versioning）</h3><ul>
+<li><strong>方法</strong>：将版本号直接嵌入URL中。例如：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">https://api.example.com/v1/users</span><br><span class="line">https://api.example.com/v2/users</span><br></pre></td></tr></table></figure></li>
+<li><strong>优点</strong>：<ul>
+<li>简单直观，易于理解和实现。</li>
+<li>客户端可以明确指定所需的API版本。</li>
+</ul>
+</li>
+<li><strong>缺点</strong>：<ul>
+<li>URL变得冗长，不够优雅。</li>
+<li>违反了REST的“资源唯一标识”原则，因为同一个资源可能有多个URL。</li>
+<li>如果版本号变化频繁，维护成本较高。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="自定义请求头版本控制（Header-Versioning）"><a href="#自定义请求头版本控制（Header-Versioning）" class="headerlink" title="自定义请求头版本控制（Header Versioning）"></a>自定义请求头版本控制（Header Versioning）</h3><ul>
+<li><strong>方法</strong>：通过自定义HTTP请求头传递版本信息。例如：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">GET /users HTTP/1.1</span><br><span class="line">Host: api.example.com</span><br><span class="line">Accept-Version: v2</span><br></pre></td></tr></table></figure></li>
+<li><strong>优点</strong>：<ul>
+<li>URL保持简洁，符合REST的设计原则。</li>
+<li>版本信息与资源标识分离，更灵活。</li>
+</ul>
+</li>
+<li><strong>缺点</strong>：<ul>
+<li>需要客户端显式设置请求头，增加了客户端的复杂性。</li>
+<li>不易于通过浏览器直接测试。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="Accept-Header版本控制（Content-Negotiation）"><a href="#Accept-Header版本控制（Content-Negotiation）" class="headerlink" title="Accept Header版本控制（Content Negotiation）"></a>Accept Header版本控制（Content Negotiation）</h3><ul>
+<li><strong>方法</strong>：利用HTTP的<code>Accept</code>头进行版本控制。例如：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">GET /users HTTP/1.1</span><br><span class="line">Host: api.example.com</span><br><span class="line">Accept: application/vnd.example.v2+json</span><br></pre></td></tr></table></figure></li>
+<li><strong>优点</strong>：<ul>
+<li>完全符合HTTP协议的标准。</li>
+<li>URL保持简洁，版本信息与资源标识分离。</li>
+</ul>
+</li>
+<li><strong>缺点</strong>：<ul>
+<li>客户端需要理解复杂的MIME类型。</li>
+<li>不易于通过浏览器直接测试。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="查询参数版本控制（Query-Parameter-Versioning）"><a href="#查询参数版本控制（Query-Parameter-Versioning）" class="headerlink" title="查询参数版本控制（Query Parameter Versioning）"></a>查询参数版本控制（Query Parameter Versioning）</h3><ul>
+<li><strong>方法</strong>：将版本号作为查询参数传递。例如：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://api.example.com/users?version=v2</span><br></pre></td></tr></table></figure></li>
+<li><strong>优点</strong>：<ul>
+<li>实现简单，易于测试。</li>
+<li>URL仍然保持一定的简洁性。</li>
+</ul>
+</li>
+<li><strong>缺点</strong>：<ul>
+<li>查询参数通常用于过滤或排序，混用可能导致语义不清晰。</li>
+<li>违反了REST的“资源唯一标识”原则。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="域名版本控制（Domain-Versioning）"><a href="#域名版本控制（Domain-Versioning）" class="headerlink" title="域名版本控制（Domain Versioning）"></a>域名版本控制（Domain Versioning）</h3><ul>
+<li><strong>方法</strong>：将版本号作为子域名或独立域名。例如：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">https://v1.api.example.com/users</span><br><span class="line">https://v2.api.example.com/users</span><br></pre></td></tr></table></figure></li>
+<li><strong>优点</strong>：<ul>
+<li>完全隔离不同版本的API，适合大规模版本升级。</li>
+<li>URL清晰，易于管理。</li>
+</ul>
+</li>
+<li><strong>缺点</strong>：<ul>
+<li>需要维护多个域名或子域名，增加了运维成本。</li>
+<li>客户端需要知道具体的域名。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="HATEOAS版本控制（动态版本控制）"><a href="#HATEOAS版本控制（动态版本控制）" class="headerlink" title="HATEOAS版本控制（动态版本控制）"></a>HATEOAS版本控制（动态版本控制）</h3><ul>
+<li><strong>方法</strong>：通过HATEOAS（超媒体作为应用状态引擎）动态提供API版本信息。客户端从初始入口点获取可用版本和资源链接。</li>
+<li><strong>优点</strong>：<ul>
+<li>完全符合REST的设计原则。</li>
+<li>客户端无需硬编码版本信息，灵活性高。</li>
+</ul>
+</li>
+<li><strong>缺点</strong>：<ul>
+<li>实现复杂，需要额外的元数据支持。</li>
+<li>客户端需要支持HATEOAS。</li>
+</ul>
+</li>
+</ul>
+<hr>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://dopaminenone.github.io">DopamineNone</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://dopaminenone.github.io/2025/02/05/RESTful%20API%E5%88%9D%E5%AD%A6%E4%B9%A0/">https://dopaminenone.github.io/2025/02/05/RESTful%20API%E5%88%9D%E5%AD%A6%E4%B9%A0/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://dopaminenone.github.io" target="_blank">多巴胺の小窝</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%90%8E%E7%AB%AF/">后端</a><a class="post-meta__tags" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a><a class="post-meta__tags" href="/tags/Web/">Web</a></div><div class="post_share"></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat.png" target="_blank"><img class="post-qr-code-img" src="/img/wechat.png" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/img/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="/img/alipay.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2025/01/26/%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0-%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/" title="算法笔记-贪心算法"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">算法笔记-贪心算法</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/02/06/Django%E5%85%A5%E9%97%A8%E7%AC%94%E8%AE%B0/" title="Django入门笔记"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-02-06</div><div class="title">Django入门笔记</div></div></a></div><div><a href="/2024/08/24/MySQL%E4%B9%8B%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/" title="MySQL之存储引擎"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-08-24</div><div class="title">MySQL之存储引擎</div></div></a></div><div><a href="/2024/08/24/MySQL%E4%B9%8B%E7%B4%A2%E5%BC%95/" title="MySQL之索引"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-08-24</div><div class="title">MySQL之索引</div></div></a></div><div><a href="/2023/08/25/Http%E5%9F%BA%E7%A1%80/" title="Web之Http基础"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-08-25</div><div class="title">Web之Http基础</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">DopamineNone</div><div class="author-info__description">追求自发向上的成长</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">30</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">21</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/DopamineNone"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/DopamineNone" target="_blank" title="GitHub"><i class="fab fa-github" style="color: ;"></i></a><a class="social-icon" href="mailto:dopaminenone@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: ;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">本博客尚未加速，请耐心等待加载...</br>网址1：</br>https://dopamine-none.gitee.io/</br>网址2：</br>https://dopaminenone.github.io/</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFRESTful-API"><span class="toc-number">1.</span> <span class="toc-text">什么是RESTful API</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RESTful-API%E6%A0%B8%E5%BF%83%E5%8E%9F%E5%88%99"><span class="toc-number">2.</span> <span class="toc-text">RESTful API核心原则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GET-POST-PUT-DELETE"><span class="toc-number">3.</span> <span class="toc-text">GET&#x2F;POST&#x2F;PUT&#x2F;DELETE</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81-HTTP-%E7%8A%B6%E6%80%81%E7%A0%81%E5%9C%A8API%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8"><span class="toc-number">4.</span> <span class="toc-text">常见 HTTP 状态码在API中的应用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%88%90%E5%8A%9F%E7%8A%B6%E6%80%81%E7%A0%81%EF%BC%882xx%EF%BC%89"><span class="toc-number">4.1.</span> <span class="toc-text">成功状态码（2xx）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E9%94%99%E8%AF%AF%E7%8A%B6%E6%80%81%E7%A0%81%EF%BC%884xx%EF%BC%89"><span class="toc-number">4.2.</span> <span class="toc-text">客户端错误状态码（4xx）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%94%99%E8%AF%AF%E7%8A%B6%E6%80%81%E7%A0%81%EF%BC%885xx%EF%BC%89"><span class="toc-number">4.3.</span> <span class="toc-text">服务器错误状态码（5xx）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RESTful-API%E7%9A%84URL%E8%AE%BE%E8%AE%A1%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="toc-number">5.</span> <span class="toc-text">RESTful API的URL设计最佳实践</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HATEOAS"><span class="toc-number">6.</span> <span class="toc-text">HATEOAS</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RESTful-API%E7%9A%84%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6"><span class="toc-number">7.</span> <span class="toc-text">RESTful API的版本控制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#URL%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6%EF%BC%88URI-Versioning%EF%BC%89"><span class="toc-number">7.1.</span> <span class="toc-text">URL版本控制（URI Versioning）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E8%AF%B7%E6%B1%82%E5%A4%B4%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6%EF%BC%88Header-Versioning%EF%BC%89"><span class="toc-number">7.2.</span> <span class="toc-text">自定义请求头版本控制（Header Versioning）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Accept-Header%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6%EF%BC%88Content-Negotiation%EF%BC%89"><span class="toc-number">7.3.</span> <span class="toc-text">Accept Header版本控制（Content Negotiation）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E5%8F%82%E6%95%B0%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6%EF%BC%88Query-Parameter-Versioning%EF%BC%89"><span class="toc-number">7.4.</span> <span class="toc-text">查询参数版本控制（Query Parameter Versioning）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%9F%E5%90%8D%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6%EF%BC%88Domain-Versioning%EF%BC%89"><span class="toc-number">7.5.</span> <span class="toc-text">域名版本控制（Domain Versioning）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HATEOAS%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6%EF%BC%88%E5%8A%A8%E6%80%81%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6%EF%BC%89"><span class="toc-number">7.6.</span> <span class="toc-text">HATEOAS版本控制（动态版本控制）</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/05/RESTful%20API%E5%88%9D%E5%AD%A6%E4%B9%A0/" title="Restful API初学习">Restful API初学习</a><time datetime="2025-02-05T08:21:34.000Z" title="发表于 2025-02-05 16:21:34">2025-02-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/01/26/%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0-%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/" title="算法笔记-贪心算法">算法笔记-贪心算法</a><time datetime="2025-01-26T00:33:22.000Z" title="发表于 2025-01-26 08:33:22">2025-01-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/01/22/Git%E4%B9%8B.git%E7%9B%AE%E5%BD%95/" title="Git之.git目录">Git之.git目录</a><time datetime="2025-01-22T13:00:43.000Z" title="发表于 2025-01-22 21:00:43">2025-01-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/01/20/Git%E4%B9%8B%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95(2)/" title="Git之基本用法(2)">Git之基本用法(2)</a><time datetime="2025-01-20T10:48:06.000Z" title="发表于 2025-01-20 18:48:06">2025-01-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/01/19/Golang%E4%B9%8BCobra%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/" title="Golang之Cobra基本使用">Golang之Cobra基本使用</a><time datetime="2025-01-19T08:28:09.000Z" title="发表于 2025-01-19 16:28:09">2025-01-19</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/img/banner.png')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By DopamineNone</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Welcome to my blog!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"><script>function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: '935a45e292e7aefc49f5',
+      clientSecret: '4f0120383b37695a558ebab1ed09ee8e3c89d0d4',
+      repo: 'dopaminenone.github.io',
+      owner: 'DopamineNone',
+      admin: ['DopamineNone'],
+      id: 'e56b08ed917dd070c204e4cf4c250ac1',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+    getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.textContent= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !false) {
+  if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
